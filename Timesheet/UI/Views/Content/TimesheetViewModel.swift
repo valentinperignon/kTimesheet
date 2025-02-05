@@ -67,19 +67,6 @@ struct ApiFetcher {
     }
 }
 
-struct SearchResultAPI: Codable, Sendable {
-    let issues: [IssueAPI]
-}
-
-struct IssueAPI: Codable, Sendable {
-    let key: String
-    let fields: FieldsAPI
-}
-
-struct FieldsAPI: Codable, Sendable {
-    let summary: String
-}
-
 struct Epic: Sendable, Hashable, Identifiable {
     var id: String { key }
     let key: String
