@@ -10,6 +10,7 @@ import SwiftUI
 
 struct LoginView: View {
     @Environment(UserManager.self) private var userManager
+    @Environment(RootViewModel.self) private var rootViewModel
 
     @State private var username = ""
     @State private var token = ""
@@ -56,6 +57,7 @@ struct LoginView: View {
         Task {
             do {
                 try await userManager.saveUser(username: trimmedUsername, token: trimmedToken)
+                rootViewModel.transition(to: .content)
             } catch {
                 isShowingError = true
                 print("The following error occurred: \(error)")

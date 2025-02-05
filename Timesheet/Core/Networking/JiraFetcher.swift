@@ -10,7 +10,7 @@ import Foundation
 struct JiraFetcher {
     private let baseURL = "https://infomaniak.atlassian.net"
 
-    private let authenticatedSession: URLSession
+    private var authenticatedSession: URLSession!
 
     enum DomainError: Error {
         case invalidURL
@@ -21,7 +21,6 @@ struct JiraFetcher {
     }
 
     init(user: User) {
-        authenticatedSession = URLSession(configuration: .default)
         setupAuthenticatedSession(for: user)
     }
 
@@ -62,8 +61,11 @@ struct JiraFetcher {
         let authorizationData = Data("\(user.username):\(user.token)".utf8)
         let base64Authorization = authorizationData.base64EncodedString()
 
-        authenticatedSession.configuration.httpAdditionalHeaders = [
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = [
             "Authorization": "Basic \(base64Authorization)"
         ]
+
+        authenticatedSession = URLSession(configuration: configuration)
     }
 }

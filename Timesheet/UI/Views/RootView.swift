@@ -19,7 +19,7 @@ struct RootView: View {
             case .login:
                 LoginView()
             case .content:
-                ContentView()
+                ContentView(userManager: userManager)
             }
         }
         .environment(userManager)

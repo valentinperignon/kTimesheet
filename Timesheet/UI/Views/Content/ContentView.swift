@@ -7,76 +7,86 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            if viewModel.epics.isEmpty {
-                Text("Loading...")
-            } else {
-                FormView(viewModel: viewModel, epics: viewModel.epics)
-            }
-        }
-        .padding()
-        .task {
-            try? await viewModel.fetchEpics()
-        }
-    }
+extension Epic {
+    static let unknown = Epic(id: "-1", summary: "-- Faites un choix", subjects: [])
 }
 
-struct FormView: View {
+extension Subject {
+    static let unknown = Subject(id: "-1", summary: "-- Faites un choix")
+}
+
+struct ContentView: View {
     @Environment(\.dismiss) private var dismiss
 
-    @State private var epic: Epic
-    @State private var issue: Epic
+    @State private var viewModel: TimesheetViewModel
+
+    @State private var epic = Epic.unknown
+    @State private var subject = Subject.unknown
+
     @State private var time = 0
 
-    let viewModel: TimesheetViewModel
-    let epics: [Epic]
+    private var isFormValid: Bool {
+        return epic != .unknown && subject != .unknown && time > 0
+    }
 
-    init(viewModel: TimesheetViewModel, epics: [Epic]) {
-        self.viewModel = viewModel
-        self.epics = epics
-
-        _epic = .init(wrappedValue: epics.first!)
-        _issue = .init(wrappedValue: epics.first!)
+    init(userManager: UserManager) {
+        _viewModel = State(wrappedValue: TimesheetViewModel(userManager: userManager))
     }
 
     var body: some View {
         Form {
             Picker("Epic", selection: $epic) {
-                ForEach(epics) { epic in
+                Text(Epic.unknown.summary)
+                    .tag(Epic.unknown)
+
+                ForEach(viewModel.epics) { epic in
                     Text(epic.summary)
                         .tag(epic)
                 }
             }
+            .task {
+                try? await viewModel.fetchEpics()
+            }
             .task(id: epic) {
-                try? await viewModel.fetchIssues(of: epic.key)
+                guard epic != .unknown else { return }
+                subject = .unknown
+                try? await viewModel.fetchIssues(of: epic)
             }
 
-            if !viewModel.issues.isEmpty {
-                Picker("Issues", selection: $issue) {
-                    ForEach(viewModel.issues) { epic in
-                        Text(epic.summary)
-                            .tag(epic)
-                    }
-                }
-                .onAppear {
-                    issue = viewModel.issues.first!
-                }
+            Picker("Sujet", selection: $subject) {
+                Text(Subject.unknown.summary)
+                    .tag(Subject.unknown)
 
-                TextField("Time", value: $time, format: .number)
-
-                Button("Valider") {
-                    Task {
-                        try await viewModel.validate(issue: issue.key, time: time)
-                    }
-                    dismiss()
+                ForEach(epic.subjects) { epic in
+                    Text(epic.summary)
+                        .tag(epic)
                 }
             }
+
+            TextField("Temps", value: $time, format: .number)
+
+            Button(action: validateTimesheet) {
+                Label("Valider", systemImage: "checkmark.circle")
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.large)
+            .disabled(!isFormValid)
+            .padding(.top, 8)
+        }
+        .padding()
+    }
+
+    private func validateTimesheet() {
+        Task {
+            try await viewModel.validate(issue: subject, time: time)
+
+            epic = .unknown
+            subject = .unknown
+            time = 0
         }
     }
 }
 
 #Preview {
-    ContentView(viewModel: TimesheetViewModel())
+    ContentView(userManager: UserManager())
 }
