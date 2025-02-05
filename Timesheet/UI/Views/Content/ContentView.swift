@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    let viewModel: TimesheetViewModel
-
     var body: some View {
         VStack {
             if viewModel.epics.isEmpty {
