@@ -9,11 +9,9 @@ import SwiftUI
 
 @main
 struct TimesheetApp: App {
-    @State private var viewModel = TimesheetViewModel()
-
     var body: some Scene {
         MenuBarExtra("Timesheet", systemImage: "calendar.badge.clock") {
-            ContentView(viewModel: viewModel)
+            RootView()
         }
         .menuBarExtraStyle(.window)
     }
