@@ -11,7 +11,7 @@ import SwiftUI
 extension SimpleToastOptions {
     static let timesheet = SimpleToastOptions(
         alignment: .bottom,
-        hideAfter: TimeInterval(30),
+        hideAfter: TimeInterval(15),
         backdrop: nil,
         animation: .default,
         modifierType: .fade,

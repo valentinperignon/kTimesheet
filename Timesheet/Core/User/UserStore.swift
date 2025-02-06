@@ -27,14 +27,8 @@ actor UserStore {
         guard status == errSecSuccess else { throw DomainError.keychainError(status) }
     }
 
-    func fetchUser(username: String) throws -> User {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "fr.valentinperignon.Timesheet",
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecReturnAttributes as String: true,
-            kSecReturnData as String: true
-        ]
+    func fetchUser() throws -> User {
+        let query = generateQuery()
 
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
@@ -50,5 +44,23 @@ actor UserStore {
         }
 
         return User(username: username, token: token)
+    }
+
+    func removeUser() throws {
+        let query = generateQuery()
+
+        let status = SecItemDelete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else { throw DomainError.keychainError(status) }
+    }
+
+    private func generateQuery() -> [String: Any] {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: "fr.valentinperignon.Timesheet",
+            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecReturnAttributes as String: true,
+            kSecReturnData as String: true
+        ]
+        return query
     }
 }
