@@ -11,6 +11,8 @@ import RealmSwift
 import SwiftUI
 
 struct ContentView: View {
+    private static let minimumFetchDelay = TimeInterval(60 * 60 * 3) // 3 hours
+
     @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
@@ -57,15 +59,12 @@ struct ContentView: View {
                     Text(Epic.unknown.summary)
                         .tag(Epic.unknown.id)
 
-                    ForEach(epics, id: \.self) { epic in
+                    ForEach(epics) { epic in
                         Text(epic.summary)
                             .tag(epic.id)
                     }
                 }
                 .disabled(epics.isEmpty)
-                .task {
-                    try? await jiraManager.fetchEpics()
-                }
                 .task(id: epicID) {
                     guard epicID != Epic.unknown.id else { return }
                     subjectID = Subject.unknown.id
@@ -85,8 +84,8 @@ struct ContentView: View {
 
                 TextField("Temps", value: $time, format: .number)
 
-                Button(action: validateTimesheet) {
-                    Label("Valider", systemImage: "checkmark.circle")
+                Button(action: sendTimesheet) {
+                    Label("Envoyer", systemImage: "checkmark.circle")
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
@@ -103,20 +102,36 @@ struct ContentView: View {
             Label("Envoyé", systemImage: "checkmark.circle")
                 .toast()
         }
+        .task {
+            await fetchEpics()
+        }
     }
 
-    private func validateTimesheet() {
+    private func fetchEpics() async {
+        let lastFetchDate = UserDefaults.standard.object(forKey: "lastFetchDate") as? Date
+
+        if let lastFetchDate, lastFetchDate.distance(to: .now) < Self.minimumFetchDelay {
+            return
+        }
+
+        do {
+            try await jiraManager.fetchEpics()
+            UserDefaults.standard.set(Date.now, forKey: "lastFetchDate")
+        } catch {
+            print("Impossible to fetch epics")
+        }
+    }
+
+    private func sendTimesheet() {
         Task {
             do {
-                try await jiraManager.validate(issueID: subjectID, time: time)
+                try await jiraManager.sendTime(issueID: subjectID, time: time)
                 isShowingSuccess = true
             } catch {
                 isShowingError = true
             }
 
-            epicID = Epic.unknown.id
-            subjectID = Epic.unknown.id
-            time = 0
+            resetForm()
         }
     }
 
@@ -125,6 +140,12 @@ struct ContentView: View {
             try await userManager.removeUser()
             rootViewModel.transition(to: .login)
         }
+    }
+
+    private func resetForm() {
+        epicID = Epic.unknown.id
+        subjectID = Epic.unknown.id
+        time = 0
     }
 }
 
