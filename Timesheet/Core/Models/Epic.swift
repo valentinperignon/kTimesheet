@@ -5,30 +5,25 @@
 //  Created by Valentin Perignon on 05.02.2025.
 //
 
+import RealmSwift
 import Foundation
-import SwiftData
 
-@Model
-final class Epic: Hashable, Identifiable {
-    var id: String
-    var summary: String
-    var subjects: [Subject]
+final class Epic: Object, JiraResult {
+    @Persisted(primaryKey: true) var id: String
+    @Persisted var summary: String
+    @Persisted var subjects: List<Subject>
 
-    init(id: String, summary: String, subjects: [Subject]) {
+    convenience init(id: String, summary: String) {
+        self.init()
         self.id = id
         self.summary = summary
-        self.subjects = subjects
     }
 
     convenience init(from issue: IssueAPI) {
-        self.init(id: issue.key, summary: issue.fields.summary, subjects: [])
+        self.init(id: issue.key, summary: issue.fields.summary)
     }
+}
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-    static func == (lhs: Epic, rhs: Epic) -> Bool {
-        return lhs.id == rhs.id
-    }
+extension Epic {
+    static let unknown = Epic(id: "-1", summary: "-- Faites un choix")
 }

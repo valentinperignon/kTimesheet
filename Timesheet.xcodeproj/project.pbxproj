@@ -7,8 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; };
+		F9447ECB2D540BD100E0779D /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9E2ABE62D53DDD30041FD1E /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = F9E2ABE52D53DDD30041FD1E /* SimpleToast */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F9447ECA2D540BD000E0779D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F9447ECB2D540BD100E0779D /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F92EAB042D52667600D8F7C2 /* Timesheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timesheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -27,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */,
 				F9E2ABE62D53DDD30041FD1E /* SimpleToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,6 +77,7 @@
 				F92EAB002D52667600D8F7C2 /* Sources */,
 				F92EAB012D52667600D8F7C2 /* Frameworks */,
 				F92EAB022D52667600D8F7C2 /* Resources */,
+				F9447ECA2D540BD000E0779D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -71,6 +89,7 @@
 			name = Timesheet;
 			packageProductDependencies = (
 				F9E2ABE52D53DDD30041FD1E /* SimpleToast */,
+				F9447EC72D540A2800E0779D /* RealmSwift */,
 			);
 			productName = Timesheet;
 			productReference = F92EAB042D52667600D8F7C2 /* Timesheet.app */;
@@ -102,6 +121,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */,
+				F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F92EAB052D52667600D8F7C2 /* Products */;
@@ -332,6 +352,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sanzaru/SimpleToast.git";
@@ -343,6 +371,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F9447EC72D540A2800E0779D /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		F9E2ABE52D53DDD30041FD1E /* SimpleToast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */;

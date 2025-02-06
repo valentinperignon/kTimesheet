@@ -5,15 +5,15 @@
 //  Created by Valentin Perignon on 05.02.2025.
 //
 
+import RealmSwift
 import Foundation
-import SwiftData
 
-@Model
-final class Subject: Hashable, Identifiable {
-    var id: String
-    var summary: String
+final class Subject: EmbeddedObject, JiraResult {
+    @Persisted var id: String
+    @Persisted var summary: String
 
-    init(id: String, summary: String) {
+    convenience init(id: String, summary: String) {
+        self.init()
         self.id = id
         self.summary = summary
     }
@@ -21,12 +21,8 @@ final class Subject: Hashable, Identifiable {
     convenience init(from issue: IssueAPI) {
         self.init(id: issue.key, summary: issue.fields.summary)
     }
+}
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-    static func == (lhs: Subject, rhs: Subject) -> Bool {
-        return lhs.id == rhs.id
-    }
+extension Subject {
+    static let unknown = Subject(id: "-1", summary: "-- Faites un choix")
 }
