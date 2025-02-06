@@ -19,25 +19,25 @@ struct ContentView: View {
     let jiraManager: JiraManager
 
     var body: some View {
-        VStack {
-            HStack {
-                Text("Timesheet")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        NavigationStack {
+            VStack {
+                HStack {
+                    Text("Timesheet")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                Button(action: logout) {
-                    Label("Se Déconnecter", systemImage: "person.slash")
-                        .labelStyle(.iconOnly)
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Paramètres", systemImage: "gear")
+                            .labelStyle(.iconOnly)
+                    }
                 }
-                .buttonStyle(.accessoryBar)
-            }
-            .padding(.bottom, 8)
 
-            FormView(jiraManager: jiraManager)
-        }
-        .padding()
-        .task {
-            await fetchEpics()
+                FormView(jiraManager: jiraManager)
+            }
+            .padding()
+            .task {
+                await fetchEpics()
+            }
         }
     }
 
