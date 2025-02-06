@@ -14,8 +14,6 @@ struct ContentView: View {
     @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
-    @State private var viewModel: TimesheetViewModel
-
     @State private var epicID = Epic.unknown.id
     @State private var subjectID = Subject.unknown.id
     @State private var time = 0.0
@@ -25,6 +23,8 @@ struct ContentView: View {
 
     @ObservedResults(Epic.self, sortDescriptor: SortDescriptor(keyPath: "summary", ascending: true)) var epics
 
+    private let jiraManager: JiraManager
+
     private var selectedEpic: Epic {
         epics.first { $0.id == epicID } ?? .unknown
     }
@@ -33,8 +33,8 @@ struct ContentView: View {
         return epicID != Epic.unknown.id && subjectID != Subject.unknown.id && time > 0
     }
 
-    init(userManager: UserManager) {
-        _viewModel = State(wrappedValue: TimesheetViewModel(userManager: userManager))
+    init(jiraManager: JiraManager) {
+        self.jiraManager = jiraManager
     }
 
     var body: some View {
@@ -64,12 +64,12 @@ struct ContentView: View {
                 }
                 .disabled(epics.isEmpty)
                 .task {
-                    try? await viewModel.fetchEpics()
+                    try? await jiraManager.fetchEpics()
                 }
                 .task(id: epicID) {
                     guard epicID != Epic.unknown.id else { return }
                     subjectID = Subject.unknown.id
-                    try? await viewModel.fetchIssues(of: epicID)
+                    try? await jiraManager.fetchIssues(of: epicID)
                 }
 
                 Picker("Sujet", selection: $subjectID) {
@@ -108,7 +108,7 @@ struct ContentView: View {
     private func validateTimesheet() {
         Task {
             do {
-                try await viewModel.validate(issueID: subjectID, time: time)
+                try await jiraManager.validate(issueID: subjectID, time: time)
                 isShowingSuccess = true
             } catch {
                 isShowingError = true
@@ -129,5 +129,7 @@ struct ContentView: View {
 }
 
 #Preview {
-   ContentView(userManager: UserManager())
+    ContentView(
+        jiraManager: JiraManager(jiraFetcher: JiraFetcher(user: User(username: "a", token: "a")))
+    )
 }

@@ -11,7 +11,7 @@ import SwiftUI
 enum RootViewState {
     case hello
     case login
-    case content
+    case content(JiraManager)
 }
 
 @Observable @MainActor

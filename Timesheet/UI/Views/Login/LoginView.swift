@@ -57,7 +57,8 @@ struct LoginView: View {
         Task {
             do {
                 try await userManager.saveUser(username: trimmedUsername, token: trimmedToken)
-                rootViewModel.transition(to: .content)
+                guard let jiraManager = userManager.jiraManager else { return }
+                rootViewModel.transition(to: .content(jiraManager))
             } catch {
                 isShowingError = true
                 print("The following error occurred: \(error)")
