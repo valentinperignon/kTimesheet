@@ -18,7 +18,10 @@ struct ContentView: View {
 
     @State private var epicID = Epic.unknown.id
     @State private var subjectID = Subject.unknown.id
-    @State private var time = 0.0
+    @State private var duration = Calendar.current.startOfDay(for: .now)
+    @State private var comment = ""
+
+    @State private var isSendingForm = false
 
     @State private var isShowingSuccess = false
     @State private var isShowingError = false
@@ -32,7 +35,7 @@ struct ContentView: View {
     }
 
     private var isFormValid: Bool {
-        return epicID != Epic.unknown.id && subjectID != Subject.unknown.id && time > 0
+        return epicID != Epic.unknown.id && subjectID != Subject.unknown.id
     }
 
     init(jiraManager: JiraManager) {
@@ -82,10 +85,21 @@ struct ContentView: View {
                 }
                 .disabled(selectedEpic.subjects.isEmpty)
 
-                TextField("Temps", value: $time, format: .number)
+                DatePicker("Temps", selection: $duration, displayedComponents: .hourAndMinute)
+
+                TextField("Commentaire", text: $comment)
+                    .textFieldStyle(.roundedBorder)
 
                 Button(action: sendTimesheet) {
-                    Label("Envoyer", systemImage: "checkmark.circle")
+                    ZStack {
+                        Label("Envoyer", systemImage: "checkmark.circle")
+                            .opacity(isSendingForm ? 0 : 1)
+
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .controlSize(.small)
+                            .opacity(isSendingForm ? 1 : 0)
+                    }
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
@@ -125,7 +139,17 @@ struct ContentView: View {
     private func sendTimesheet() {
         Task {
             do {
-                try await jiraManager.sendTime(issueID: subjectID, time: time)
+                let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: duration)
+
+                isSendingForm = true
+                try await jiraManager.sendTime(
+                    issueID: subjectID,
+                    hours: dateComponents.hour ?? 0,
+                    minutes: dateComponents.minute ?? 0,
+                    comment: comment
+                )
+                isSendingForm = false
+
                 isShowingSuccess = true
             } catch {
                 isShowingError = true
@@ -145,7 +169,8 @@ struct ContentView: View {
     private func resetForm() {
         epicID = Epic.unknown.id
         subjectID = Epic.unknown.id
-        time = 0
+        duration = Calendar.current.startOfDay(for: .now)
+        comment = ""
     }
 }
 
