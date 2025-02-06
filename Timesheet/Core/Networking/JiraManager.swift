@@ -53,7 +53,7 @@ final class JiraManager {
         }
     }
 
-    func validate(issueID: String, time: Double) async throws {
+    func sendTime(issueID: String, time: Double) async throws {
         let request = try jiraFetcher.makeRequest(
             path: "/rest/api/2/issue/\(issueID)/worklog",
             parameters: TimeSpent(timeSpent: time)
