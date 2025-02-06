@@ -10,7 +10,11 @@ import SimpleToast
 import SwiftUI
 
 struct FormView: View {
-    @ObservedResults(Epic.self, sortDescriptor: SortDescriptor(keyPath: "summary", ascending: true)) var epics
+    @ObservedResults(
+        Epic.self,
+        filter: NSPredicate(format: "showing == true"),
+        sortDescriptor: SortDescriptor(keyPath: "summary", ascending: true)
+    ) var epics
 
     @State private var epicID = Epic.unknown.id
     @State private var subjectID = Subject.unknown.id

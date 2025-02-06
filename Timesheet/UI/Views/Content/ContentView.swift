@@ -13,7 +13,6 @@ import SwiftUI
 struct ContentView: View {
     private static let minimumFetchDelay = TimeInterval(60 * 60 * 3) // 3 hours
 
-    @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
     let jiraManager: JiraManager
@@ -26,7 +25,7 @@ struct ContentView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    NavigationLink(destination: SettingsView()) {
+                    Button(action: openSettings) {
                         Label("Paramètres", systemImage: "gear")
                             .labelStyle(.iconOnly)
                     }
@@ -42,25 +41,11 @@ struct ContentView: View {
     }
 
     private func fetchEpics() async {
-        let lastFetchDate = UserDefaults.standard.object(forKey: "lastFetchDate") as? Date
-
-        if let lastFetchDate, lastFetchDate.distance(to: .now) < Self.minimumFetchDelay {
-            return
-        }
-
-        do {
-            try await jiraManager.fetchEpics()
-            UserDefaults.standard.set(Date.now, forKey: "lastFetchDate")
-        } catch {
-            print("Impossible to fetch epics")
-        }
+        try? await jiraManager.fetchEpics()
     }
 
-    private func logout() {
-        Task {
-            try await userManager.removeUser()
-            rootViewModel.transition(to: .login)
-        }
+    private func openSettings() {
+        rootViewModel.transition(to: .settings)
     }
 }
 

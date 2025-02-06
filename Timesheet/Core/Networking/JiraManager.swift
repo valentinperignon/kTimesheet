@@ -64,6 +64,7 @@ final class JiraManager {
     private func keepCacheAttribute(for epic: Epic, in realm: Realm) {
         guard let savedEpic = realm.object(ofType: Epic.self, forPrimaryKey: epic.id) else { return }
 
+        epic.showing = savedEpic.showing
         for subject in savedEpic.subjects {
             epic.subjects.append(Subject(value: subject.freeze()))
         }
