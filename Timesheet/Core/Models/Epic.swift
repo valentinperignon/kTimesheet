@@ -12,11 +12,13 @@ final class Epic: Object, JiraResult {
     @Persisted(primaryKey: true) var id: String
     @Persisted var summary: String
     @Persisted var subjects: List<Subject>
+    @Persisted var showing: Bool
 
     convenience init(id: String, summary: String) {
         self.init()
         self.id = id
         self.summary = summary
+        showing = true
     }
 
     convenience init(from issue: IssueAPI) {

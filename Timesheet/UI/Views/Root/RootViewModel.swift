@@ -12,6 +12,7 @@ enum RootViewState {
     case hello
     case login
     case content(JiraManager)
+    case settings
 }
 
 @Observable @MainActor
