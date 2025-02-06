@@ -29,8 +29,9 @@ struct HelloView: View {
         }
         .padding()
         .task {
-            if (try? await userManager.setCurrentUser()) != nil {
-                rootViewModel.transition(to: .content)
+            if (try? await userManager.setCurrentUser()) != nil,
+               let jiraManager = userManager.jiraManager {
+                rootViewModel.transition(to: .content(jiraManager))
             } else {
                 rootViewModel.transition(to: .login)
             }

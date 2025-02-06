@@ -13,9 +13,11 @@ final class UserManager {
     private(set) var currentUser: User? {
         didSet {
             setupCurrentJiraFetcher()
+            setupCurrentJiraManager()
         }
     }
     private(set) var jiraFetcher: JiraFetcher?
+    private(set) var jiraManager: JiraManager?
 
     private let userStore = UserStore()
 
@@ -41,5 +43,14 @@ final class UserManager {
         }
 
         jiraFetcher = JiraFetcher(user: currentUser)
+    }
+
+    private func setupCurrentJiraManager() {
+        guard currentUser != nil, let jiraFetcher else {
+            jiraManager = nil
+            return
+        }
+
+        jiraManager = JiraManager(jiraFetcher: jiraFetcher)
     }
 }
