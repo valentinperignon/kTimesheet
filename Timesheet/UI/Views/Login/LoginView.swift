@@ -9,6 +9,8 @@ import SimpleToast
 import SwiftUI
 
 struct LoginView: View {
+    @Environment(\.openURL) private var openURL
+
     @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
@@ -33,9 +35,19 @@ struct LoginView: View {
             TextField("Email", text: $username)
                 .textFieldStyle(.roundedBorder)
                 .textContentType(.emailAddress)
+                .onSubmit(login)
 
             SecureField("Token", text: $token)
                 .textFieldStyle(.roundedBorder)
+                .textContentType(.password)
+                .onSubmit(login)
+
+            Button(action: didTapHelpButton) {
+                Text("Pas de token Atlassian ?")
+                    .font(.caption)
+            }
+            .buttonStyle(.link)
+            .padding(.bottom, 8)
 
             Button(action: login) {
                 Label("Se connecter", systemImage: "person")
@@ -49,6 +61,10 @@ struct LoginView: View {
             Label("Erreur", systemImage: "xmark")
                 .toast()
         }
+    }
+
+    private func didTapHelpButton() {
+
     }
 
     private func login() {
