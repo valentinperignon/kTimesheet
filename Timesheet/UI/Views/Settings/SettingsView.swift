@@ -46,7 +46,7 @@ struct SettingsView: View {
 
     private func logout() {
         Task {
-            try await userManager.removeUser()
+            try await userManager.removeCurrentUser()
             rootViewModel.transition(to: .login)
         }
     }

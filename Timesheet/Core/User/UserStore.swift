@@ -6,61 +6,46 @@
 //
 
 import Foundation
+import KeychainAccess
 
 actor UserStore {
+    private static let service = "fr.valentinperignon.kTimesheet"
+
+    private let keychain = Keychain(service: "fr.valentinperignon.kTimesheet")
+
     enum DomainError: Error {
         case userNotFound
         case invalidUser
-        case keychainError(OSStatus)
+        case keychainError(Error)
     }
 
     func saveUser(username: String, token: String) throws {
-        let tokenData = Data(token.utf8)
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "fr.valentinperignon.Timesheet",
-            kSecAttrAccount as String: username,
-            kSecValueData as String: tokenData
-        ]
-
-        let status = SecItemAdd(query as CFDictionary, nil)
-        guard status == errSecSuccess else { throw DomainError.keychainError(status) }
+        do {
+            try keychain.set(token, key: username)
+        } catch {
+            throw DomainError.keychainError(error)
+        }
     }
 
-    func fetchUser() throws -> User {
-        let query = generateQuery()
-
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-
-        guard status != errSecItemNotFound else { throw DomainError.userNotFound }
-        guard status == errSecSuccess else { throw DomainError.keychainError(status) }
-
-        guard let foundItem = item as? [String: Any],
-              let tokenData = foundItem[kSecValueData as String] as? Data,
-              let token = String(data: tokenData, encoding: .utf8),
-              let username = foundItem[kSecAttrAccount as String] as? String else {
-            throw DomainError.invalidUser
+    func fetchUser(username: String) throws -> User {
+        let token: String?
+        do {
+            token = try keychain.get(username)
+        } catch {
+            throw DomainError.keychainError(error)
         }
 
+        guard let token else {
+            throw DomainError.invalidUser
+        }
         return User(username: username, token: token)
     }
 
-    func removeUser() throws {
-        let query = generateQuery()
-
-        let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else { throw DomainError.keychainError(status) }
-    }
-
-    private func generateQuery() -> [String: Any] {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "fr.valentinperignon.Timesheet",
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecReturnAttributes as String: true,
-            kSecReturnData as String: true
-        ]
-        return query
+    func removeUser(username: String) throws {
+        do {
+            try keychain.remove(username)
+        } catch {
+            throw DomainError.keychainError(error)
+        }
     }
 }
