@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = F943149A2D56AE0700382FB9 /* KeychainAccess */; };
 		F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; };
 		F9447ECB2D540BD100E0779D /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F9E2ABE62D53DDD30041FD1E /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = F9E2ABE52D53DDD30041FD1E /* SimpleToast */; };
@@ -27,7 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F92EAB042D52667600D8F7C2 /* Timesheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timesheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F92EAB042D52667600D8F7C2 /* kTimesheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kTimesheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,6 +46,7 @@
 			files = (
 				F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */,
 				F9E2ABE62D53DDD30041FD1E /* SimpleToast in Frameworks */,
+				F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +64,7 @@
 		F92EAB052D52667600D8F7C2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F92EAB042D52667600D8F7C2 /* Timesheet.app */,
+				F92EAB042D52667600D8F7C2 /* kTimesheet.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,9 +72,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F92EAB032D52667600D8F7C2 /* Timesheet */ = {
+		F92EAB032D52667600D8F7C2 /* kTimesheet */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F92EAB132D52667800D8F7C2 /* Build configuration list for PBXNativeTarget "Timesheet" */;
+			buildConfigurationList = F92EAB132D52667800D8F7C2 /* Build configuration list for PBXNativeTarget "kTimesheet" */;
 			buildPhases = (
 				F92EAB002D52667600D8F7C2 /* Sources */,
 				F92EAB012D52667600D8F7C2 /* Frameworks */,
@@ -86,13 +88,14 @@
 			fileSystemSynchronizedGroups = (
 				F92EAB062D52667600D8F7C2 /* Timesheet */,
 			);
-			name = Timesheet;
+			name = kTimesheet;
 			packageProductDependencies = (
 				F9E2ABE52D53DDD30041FD1E /* SimpleToast */,
 				F9447EC72D540A2800E0779D /* RealmSwift */,
+				F943149A2D56AE0700382FB9 /* KeychainAccess */,
 			);
 			productName = Timesheet;
-			productReference = F92EAB042D52667600D8F7C2 /* Timesheet.app */;
+			productReference = F92EAB042D52667600D8F7C2 /* kTimesheet.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -122,13 +125,14 @@
 			packageReferences = (
 				F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */,
 				F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */,
+				F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F92EAB052D52667600D8F7C2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F92EAB032D52667600D8F7C2 /* Timesheet */,
+				F92EAB032D52667600D8F7C2 /* kTimesheet */,
 			);
 		};
 /* End PBXProject section */
@@ -278,6 +282,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Timesheet/Timesheet.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -286,6 +291,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -293,7 +299,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = fr.valentinperignon.Timesheet;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.valentinperignon.kTimesheet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -306,6 +312,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Timesheet/Timesheet.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -314,6 +321,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -321,7 +329,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = fr.valentinperignon.Timesheet;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.valentinperignon.kTimesheet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -340,7 +348,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F92EAB132D52667800D8F7C2 /* Build configuration list for PBXNativeTarget "Timesheet" */ = {
+		F92EAB132D52667800D8F7C2 /* Build configuration list for PBXNativeTarget "kTimesheet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F92EAB142D52667800D8F7C2 /* Debug */,
@@ -352,12 +360,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
 			};
 		};
 		F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
@@ -371,6 +387,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F943149A2D56AE0700382FB9 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
 		F9447EC72D540A2800E0779D /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */;

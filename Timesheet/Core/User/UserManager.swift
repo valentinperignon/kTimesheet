@@ -23,19 +23,39 @@ final class UserManager {
 
     func saveUser(username: String, token: String) async throws {
         try await userStore.saveUser(username: username, token: token)
+
+        UserDefaults.standard.currentUsername = username
         currentUser = User(username: username, token: token)
     }
 
     func setCurrentUser() async throws -> User? {
-        currentUser = try await userStore.fetchUser()
-        return currentUser
+        guard let currentUsername = UserDefaults.standard.currentUsername else {
+            return nil
+        }
+
+        do {
+            currentUser = try await userStore.fetchUser(username: currentUsername)
+            return currentUser
+        } catch UserStore.DomainError.keychainError(_) {
+            try? await removeUser(username: currentUsername)
+        }
+        return nil
     }
 
-    func removeUser() async throws {
+    func removeCurrentUser() async throws {
+        guard let currentUser else { return }
+        try await removeUser(username: currentUser.username)
+    }
+
+    func removeUser(username: String) async throws {
+        try await userStore.removeUser(username: username)
+
+        UserDefaults.standard.currentUsername = nil
         currentUser = nil
-        try await userStore.removeUser()
     }
+}
 
+extension UserManager {
     private func setupCurrentJiraFetcher() {
         guard let currentUser else {
             jiraFetcher = nil
