@@ -69,6 +69,7 @@ struct FormView: View {
 
             TextField("Commentaire", text: $comment)
                 .textFieldStyle(.roundedBorder)
+                .padding(.bottom, 8)
 
             Button(action: sendTimesheet) {
                 ZStack {
