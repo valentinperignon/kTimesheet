@@ -10,6 +10,8 @@ import SimpleToast
 import SwiftUI
 
 struct FormView: View {
+    @Environment(ActivityManager.self) private var activityManager
+
     @ObservedResults(
         Epic.self,
         filter: NSPredicate(format: "showing == true"),
@@ -29,7 +31,11 @@ struct FormView: View {
     let jiraManager: JiraManager
 
     private var selectedEpic: Epic {
-        epics.first { $0.id == epicID } ?? .unknown
+        return epics.first { $0.id == epicID } ?? .unknown
+    }
+
+    private var selectedSubject: Subject? {
+        return selectedEpic.subjects.first { $0.id == subjectID }
     }
 
     private var isFormValid: Bool {
@@ -71,15 +77,24 @@ struct FormView: View {
                 .textFieldStyle(.roundedBorder)
                 .padding(.bottom, 8)
 
-            Button(action: sendTimesheet) {
-                ZStack {
-                    Label("Envoyer", systemImage: "checkmark.circle")
-                        .opacity(isSendingForm ? 0 : 1)
+            HStack {
+                Button(action: sendTimesheet) {
+                    ZStack {
+                        Label("Envoyer", systemImage: "checkmark.circle")
+                            .opacity(isSendingForm ? 0 : 1)
 
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .controlSize(.small)
-                        .opacity(isSendingForm ? 1 : 0)
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .controlSize(.small)
+                            .opacity(isSendingForm ? 1 : 0)
+                    }
+                }
+
+                Button(action: sendTimesheet) {
+                    ZStack {
+                        Label("Enregistrer", systemImage: "plus.circle")
+                            .opacity(isSendingForm ? 0 : 1)
+                    }
                 }
             }
             .buttonStyle(.bordered)
@@ -97,15 +112,18 @@ struct FormView: View {
     }
 
     private func sendTimesheet() {
+        guard isFormValid, let selectedSubject else { return }
+
         Task {
             do {
-                let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: duration)
+                let durationHelper = DurationHelper(date: duration)
+                let (hours, minutes) = durationHelper.transformToHoursAndMinutes()
 
                 isSendingForm = true
                 try await jiraManager.sendTime(
-                    issueID: subjectID,
-                    hours: dateComponents.hour ?? 0,
-                    minutes: dateComponents.minute ?? 0,
+                    subject: selectedSubject,
+                    hours: hours,
+                    minutes: minutes,
                     comment: comment
                 )
                 isSendingForm = false
@@ -117,6 +135,17 @@ struct FormView: View {
 
             resetForm()
         }
+    }
+
+    private func saveDraft() async throws {
+        guard isFormValid, let selectedSubject else { return }
+
+        let durationHelper = DurationHelper(date: duration)
+        let timeInterval = durationHelper.transformToTimeInterval()
+
+        isSendingForm = true
+        activityManager.addActivity(subject: selectedSubject, date: .now, duration: timeInterval, draft: true)
+        isSendingForm = false
     }
 
     private func resetForm() {
