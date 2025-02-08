@@ -47,8 +47,9 @@ final class JiraManager {
         let realm = getRealm()
         guard let liveEpic = realm.object(ofType: Epic.self, forPrimaryKey: epicID) else { return }
         try? realm.write {
-            liveEpic.subjects.removeAll()
-            liveEpic.subjects.append(objectsIn: subjects)
+            realm.add(subjects, update: .modified)
+
+            liveEpic.subjects.insert(objectsIn: subjects)
             realm.add(liveEpic, update: .modified)
         }
     }
@@ -65,9 +66,7 @@ final class JiraManager {
         guard let savedEpic = realm.object(ofType: Epic.self, forPrimaryKey: epic.id) else { return }
 
         epic.showing = savedEpic.showing
-        for subject in savedEpic.subjects {
-            epic.subjects.append(Subject(value: subject.freeze()))
-        }
+        epic.subjects.insert(objectsIn: savedEpic.subjects)
     }
 
     private func getRealm() -> Realm {

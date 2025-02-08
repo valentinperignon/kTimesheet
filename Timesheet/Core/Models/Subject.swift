@@ -8,8 +8,8 @@
 import RealmSwift
 import Foundation
 
-final class Subject: EmbeddedObject, JiraResult {
-    @Persisted var id: String
+final class Subject: Object, JiraResult {
+    @Persisted(primaryKey: true) var id: String
     @Persisted var summary: String
 
     convenience init(id: String, summary: String) {

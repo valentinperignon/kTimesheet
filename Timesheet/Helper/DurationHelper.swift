@@ -10,6 +10,14 @@ import Foundation
 struct DurationHelper {
     let date: Date
 
+    init(date: Date) {
+        self.date = date
+    }
+
+    init(duration: TimeInterval) {
+        date = Calendar.current.startOfDay(for: .now).addingTimeInterval(duration)
+    }
+
     func transformToHoursAndMinutes() -> (Int, Int) {
         let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
         return (dateComponents.hour ?? 0, dateComponents.minute ?? 0)
