@@ -53,9 +53,9 @@ final class JiraManager {
         }
     }
 
-    func sendTime(issueID: String, hours: Int, minutes: Int, comment: String) async throws {
+    func sendTime(subject: Subject, hours: Int, minutes: Int, comment: String) async throws {
         let request = try jiraFetcher.makeRequest(
-            path: "/rest/api/2/issue/\(issueID)/worklog",
+            path: "/rest/api/2/issue/\(subject.id)/worklog",
             parameters: TimesheetData(hours: hours, minutes: minutes, comment: comment)
         )
         let _ = try await jiraFetcher.performRequest(request)

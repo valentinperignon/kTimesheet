@@ -10,6 +10,7 @@ import SwiftUI
 struct RootView: View {
     @State private var userManager = UserManager()
     @State private var rootViewModel = RootViewModel()
+    @State private var activityManager = ActivityManager()
 
     var body: some View {
         ZStack {
@@ -26,6 +27,7 @@ struct RootView: View {
         }
         .environment(userManager)
         .environment(rootViewModel)
+        .environment(activityManager)
     }
 }
 

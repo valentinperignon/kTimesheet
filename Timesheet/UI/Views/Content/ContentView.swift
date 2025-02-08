@@ -10,10 +10,28 @@ import SimpleToast
 import RealmSwift
 import SwiftUI
 
+enum ContentType: String, Identifiable, CaseIterable {
+    case form
+    case activity
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .form:
+            return "Formulaire"
+        case .activity:
+            return "Mon Activité"
+        }
+    }
+}
+
 struct ContentView: View {
     private static let minimumFetchDelay = TimeInterval(60 * 60 * 3) // 3 hours
 
     @Environment(RootViewModel.self) private var rootViewModel
+
+    @State private var contentType = ContentType.form
 
     let jiraManager: JiraManager
 
@@ -31,7 +49,22 @@ struct ContentView: View {
                     }
                 }
 
-                FormView(jiraManager: jiraManager)
+                Picker("Type de contenue", selection: $contentType) {
+                    ForEach(ContentType.allCases) { contentType in
+                        Text(contentType.label)
+                            .tag(contentType)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(.bottom, 8)
+
+                switch contentType {
+                case .form:
+                    FormView(jiraManager: jiraManager)
+                case .activity:
+                    ActivitiesView()
+                }
             }
             .padding()
             .task {
