@@ -63,7 +63,7 @@ struct ContentView: View {
                 case .form:
                     FormView(jiraManager: jiraManager)
                 case .activity:
-                    ActivitiesView()
+                    ActivitiesView(jiraManager: jiraManager)
                 }
             }
             .padding()

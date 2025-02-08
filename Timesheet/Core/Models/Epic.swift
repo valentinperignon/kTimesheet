@@ -11,7 +11,7 @@ import Foundation
 final class Epic: Object, JiraResult {
     @Persisted(primaryKey: true) var id: String
     @Persisted var summary: String
-    @Persisted var subjects: List<Subject>
+    @Persisted var subjects: MutableSet<Subject>
     @Persisted var showing: Bool
 
     convenience init(id: String, summary: String) {

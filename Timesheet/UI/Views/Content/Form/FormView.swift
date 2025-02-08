@@ -25,7 +25,8 @@ struct FormView: View {
 
     @State private var isSendingForm = false
 
-    @State private var isShowingSuccess = false
+    @State private var isShowingSendSuccess = false
+    @State private var isShowingSaveSuccess = false
     @State private var isShowingError = false
 
     let jiraManager: JiraManager
@@ -78,23 +79,15 @@ struct FormView: View {
                 .padding(.bottom, 8)
 
             HStack {
-                Button(action: sendTimesheet) {
-                    ZStack {
-                        Label("Envoyer", systemImage: "checkmark.circle")
-                            .opacity(isSendingForm ? 0 : 1)
+                LoadingButton(
+                    label: "Envoyer",
+                    systemImage: "checkmark.circle",
+                    isLoading: isSendingForm,
+                    action: sendTimesheet
+                )
 
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .controlSize(.small)
-                            .opacity(isSendingForm ? 1 : 0)
-                    }
-                }
-
-                Button(action: sendTimesheet) {
-                    ZStack {
-                        Label("Enregistrer", systemImage: "plus.circle")
-                            .opacity(isSendingForm ? 0 : 1)
-                    }
+                Button(action: saveDraft) {
+                    Label("Enregistrer", systemImage: "plus.circle")
                 }
             }
             .buttonStyle(.bordered)
@@ -105,8 +98,12 @@ struct FormView: View {
             Label("Error", systemImage: "xmark.circle")
                 .toast()
         }
-        .simpleToast(isPresented: $isShowingSuccess, options: .timesheet) {
+        .simpleToast(isPresented: $isShowingSendSuccess, options: .timesheet) {
             Label("Envoyé", systemImage: "checkmark.circle")
+                .toast()
+        }
+        .simpleToast(isPresented: $isShowingSaveSuccess, options: .timesheet) {
+            Label("Enregistré", systemImage: "checkmark.circle")
                 .toast()
         }
     }
@@ -118,17 +115,20 @@ struct FormView: View {
             do {
                 let durationHelper = DurationHelper(date: duration)
                 let (hours, minutes) = durationHelper.transformToHoursAndMinutes()
+                let timeInterval = durationHelper.transformToTimeInterval()
 
                 isSendingForm = true
-                try await jiraManager.sendTime(
+                try await jiraManager.sendTime(subject: selectedSubject, hours: hours, minutes: minutes, comment: comment)
+                activityManager.addActivity(
                     subject: selectedSubject,
-                    hours: hours,
-                    minutes: minutes,
-                    comment: comment
+                    duration: timeInterval,
+                    comment: comment,
+                    date: .now,
+                    draft: false
                 )
                 isSendingForm = false
 
-                isShowingSuccess = true
+                isShowingSendSuccess = true
             } catch {
                 isShowingError = true
             }
@@ -137,15 +137,16 @@ struct FormView: View {
         }
     }
 
-    private func saveDraft() async throws {
+    private func saveDraft() {
         guard isFormValid, let selectedSubject else { return }
 
         let durationHelper = DurationHelper(date: duration)
         let timeInterval = durationHelper.transformToTimeInterval()
 
-        isSendingForm = true
-        activityManager.addActivity(subject: selectedSubject, date: .now, duration: timeInterval, draft: true)
-        isSendingForm = false
+        activityManager.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: .now, draft: true)
+
+        isShowingSaveSuccess = true
+        resetForm()
     }
 
     private func resetForm() {
