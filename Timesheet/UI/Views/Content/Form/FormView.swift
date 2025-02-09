@@ -55,8 +55,12 @@ struct FormView: View {
             }
             .disabled(epics.isEmpty)
             .task(id: epicID) {
-                guard epicID != Epic.unknown.id else { return }
-                subjectID = Subject.unknown.id
+                guard selectedEpic != .unknown else { return }
+                guard selectedSubject != nil else {
+                    subjectID = Subject.unknown.id
+                    return
+                }
+
                 try? await jiraManager.fetchIssues(of: epicID)
             }
 
@@ -93,6 +97,9 @@ struct FormView: View {
             .controlSize(.large)
             .disabled(!isFormValid)
         }
+        .onAppear {
+            setStateWithLastSelection()
+        }
         .simpleToast(isPresented: $isShowingError, options: .timesheet) {
             Label("Error", systemImage: "xmark.circle")
                 .toast()
@@ -105,6 +112,14 @@ struct FormView: View {
             Label("Enregistré", systemImage: "checkmark.circle")
                 .toast()
         }
+    }
+
+    private func setStateWithLastSelection() {
+        guard let lastSelectedEpic = UserDefaults.standard.lastSelectedEpic,
+              let lastSelectedSubject = UserDefaults.standard.lastSelectedSubject else { return }
+
+        epicID = lastSelectedEpic
+        subjectID = lastSelectedSubject
     }
 
     private func sendTimesheet() {
@@ -132,6 +147,7 @@ struct FormView: View {
                 isShowingError = true
             }
 
+            saveChoice()
             resetForm()
         }
     }
@@ -145,12 +161,17 @@ struct FormView: View {
         activityManager.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: .now, draft: true)
 
         isShowingSaveSuccess = true
+
+        saveChoice()
         resetForm()
     }
 
+    private func saveChoice() {
+        UserDefaults.standard.lastSelectedEpic = selectedEpic.id
+        UserDefaults.standard.lastSelectedSubject = selectedSubject?.id
+    }
+
     private func resetForm() {
-        epicID = Epic.unknown.id
-        subjectID = Epic.unknown.id
         duration = Calendar.current.startOfDay(for: .now)
         comment = ""
     }
