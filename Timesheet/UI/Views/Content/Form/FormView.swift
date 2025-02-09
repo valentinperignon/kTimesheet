@@ -10,6 +10,7 @@ import SimpleToast
 import SwiftUI
 
 struct FormView: View {
+    @Environment(JiraManager.self) private var jiraManager
     @Environment(ActivityManager.self) private var activityManager
 
     @ObservedResults(
@@ -28,8 +29,6 @@ struct FormView: View {
     @State private var isShowingSendSuccess = false
     @State private var isShowingSaveSuccess = false
     @State private var isShowingError = false
-
-    let jiraManager: JiraManager
 
     private var selectedEpic: Epic {
         return epics.first { $0.id == epicID } ?? .unknown
@@ -158,5 +157,7 @@ struct FormView: View {
 }
 
 #Preview {
-    FormView(jiraManager: JiraManager(jiraFetcher: JiraFetcher(user: User(username: "a", token: "a"))))
+    FormView()
+        .environment(PreviewHelper.jiraManager)
+        .environment(PreviewHelper.activityManager)
 }

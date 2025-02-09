@@ -27,13 +27,10 @@ enum ContentType: String, Identifiable, CaseIterable {
 }
 
 struct ContentView: View {
-    private static let minimumFetchDelay = TimeInterval(60 * 60 * 3) // 3 hours
-
     @Environment(RootViewModel.self) private var rootViewModel
+    @Environment(JiraManager.self) private var jiraManager
 
     @State private var contentType = ContentType.form
-
-    let jiraManager: JiraManager
 
     var body: some View {
         NavigationStack {
@@ -49,7 +46,7 @@ struct ContentView: View {
                     }
                 }
 
-                Picker("Type de contenue", selection: $contentType) {
+                Picker("Type de contenu", selection: $contentType) {
                     ForEach(ContentType.allCases) { contentType in
                         Text(contentType.label)
                             .tag(contentType)
@@ -61,20 +58,16 @@ struct ContentView: View {
 
                 switch contentType {
                 case .form:
-                    FormView(jiraManager: jiraManager)
+                    FormView()
                 case .activity:
-                    ActivitiesView(jiraManager: jiraManager)
+                    ActivitiesView()
                 }
             }
             .padding()
             .task {
-                await fetchEpics()
+                try? await jiraManager.fetchEpics()
             }
         }
-    }
-
-    private func fetchEpics() async {
-        try? await jiraManager.fetchEpics()
     }
 
     private func openSettings() {
@@ -83,7 +76,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(
-        jiraManager: JiraManager(jiraFetcher: JiraFetcher(user: User(username: "a", token: "a")))
-    )
+    ContentView()
+        .environment(PreviewHelper.jiraManager)
 }
