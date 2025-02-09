@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import Observation
 import Realm
 import RealmSwift
 
+@Observable
 final class JiraManager {
     private let jiraFetcher: JiraFetcher
 
@@ -59,7 +61,7 @@ final class JiraManager {
             path: "/rest/api/2/issue/\(subject.id)/worklog",
             parameters: TimesheetData(hours: hours, minutes: minutes, comment: comment)
         )
-        let _ = try await jiraFetcher.performRequest(request)
+        _ = try await jiraFetcher.performRequest(request)
     }
 
     private func keepCacheAttribute(for epic: Epic, in realm: Realm) {

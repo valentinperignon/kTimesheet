@@ -10,6 +10,7 @@ import SimpleToast
 import SwiftUI
 
 struct ActivitiesView: View {
+    @Environment(JiraManager.self) private var jiraManager
     @Environment(ActivityManager.self) private var activityManager
 
     @ObservedResults(
@@ -19,11 +20,8 @@ struct ActivitiesView: View {
     ) private var activities
 
     @State private var isSendingForm = false
-
     @State private var isShowingSuccess = false
     @State private var isShowingError = false
-
-    let jiraManager: JiraManager
 
     private var containsDraft: Bool {
         return activities.contains { $0.draft }
@@ -84,3 +82,10 @@ struct ActivitiesView: View {
         }
     }
 }
+
+#Preview {
+    ActivitiesView()
+        .environment(PreviewHelper.jiraManager)
+        .environment(PreviewHelper.activityManager)
+}
+

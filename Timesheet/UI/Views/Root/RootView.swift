@@ -20,7 +20,8 @@ struct RootView: View {
             case .login:
                 LoginView()
             case .content(let jiraManager):
-                ContentView(jiraManager: jiraManager)
+                ContentView()
+                    .environment(jiraManager)
             case .settings:
                 SettingsView()
             }
