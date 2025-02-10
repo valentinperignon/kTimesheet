@@ -37,7 +37,7 @@ final class JiraManager {
         }
     }
 
-    func fetchIssues(of epicID: String) async throws {
+    func fetchSubjects(of epicID: String) async throws {
         let request = try jiraFetcher.makeRequest(
             path: "/rest/api/2/search",
             parameters: ["jql": "project=TIM AND parentEpic=\(epicID)"]
