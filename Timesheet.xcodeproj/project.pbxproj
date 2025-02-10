@@ -28,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A77B864F2D5A9EED00890795 /* kTimesheet-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "kTimesheet-Info.plist"; sourceTree = "<group>"; };
 		F92EAB042D52667600D8F7C2 /* kTimesheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kTimesheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -56,6 +57,7 @@
 		F92EAAFB2D52667600D8F7C2 = {
 			isa = PBXGroup;
 			children = (
+				A77B864F2D5A9EED00890795 /* kTimesheet-Info.plist */,
 				F92EAB062D52667600D8F7C2 /* Timesheet */,
 				F92EAB052D52667600D8F7C2 /* Products */,
 			);
@@ -291,6 +293,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "kTimesheet-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -322,6 +325,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "kTimesheet-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
