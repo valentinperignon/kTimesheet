@@ -5,7 +5,7 @@
 //  Created by Valentin Perignon on 05.02.2025.
 //
 
-import SimpleToast
+import ToastView
 import SwiftUI
 
 struct LoginView: View {
@@ -57,14 +57,11 @@ struct LoginView: View {
             .disabled(!isFormValid)
         }
         .padding()
-        .simpleToast(isPresented: $isShowingError, options: .timesheet) {
-            Label("Erreur", systemImage: "xmark")
-                .toast()
-        }
+        .toast(isPresented: $isShowingError, title: "Erreur", icon: Image(systemName: "xmark"))
     }
 
     private func didTapHelpButton() {
-
+        openURL(URL(string: "https://id.atlassian.com/manage-profile/security/api-tokens")!)
     }
 
     private func login() {

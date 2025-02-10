@@ -6,7 +6,7 @@
 //
 
 import RealmSwift
-import SimpleToast
+import ToastView
 import SwiftUI
 
 struct ActivitiesView: View {
@@ -50,14 +50,8 @@ struct ActivitiesView: View {
                 .controlSize(.large)
             }
         }
-        .simpleToast(isPresented: $isShowingError, options: .timesheet) {
-            Label("Error", systemImage: "xmark.circle")
-                .toast()
-        }
-        .simpleToast(isPresented: $isShowingSuccess, options: .timesheet) {
-            Label("Envoyé", systemImage: "checkmark.circle")
-                .toast()
-        }
+        .toast(isPresented: $isShowingError, title: "Error", icon: Image(systemName: "xmark.circle"))
+        .toast(isPresented: $isShowingSuccess, title: "checkmark.circle", icon: Image(systemName: "checkmark.circle"))
     }
 
     private func sendDrafts() {

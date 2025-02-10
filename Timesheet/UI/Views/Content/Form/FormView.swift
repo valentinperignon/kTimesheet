@@ -6,7 +6,7 @@
 //
 
 import RealmSwift
-import SimpleToast
+import ToastView
 import SwiftUI
 
 struct FormView: View {
@@ -98,18 +98,9 @@ struct FormView: View {
         .onAppear {
             setStateWithLastSelection()
         }
-        .simpleToast(isPresented: $isShowingError, options: .timesheet) {
-            Label("Error", systemImage: "xmark.circle")
-                .toast()
-        }
-        .simpleToast(isPresented: $isShowingSendSuccess, options: .timesheet) {
-            Label("Envoyé", systemImage: "checkmark.circle")
-                .toast()
-        }
-        .simpleToast(isPresented: $isShowingSaveSuccess, options: .timesheet) {
-            Label("Enregistré", systemImage: "checkmark.circle")
-                .toast()
-        }
+        .toast(isPresented: $isShowingError, title: "Error", icon: Image(systemName: "xmark.circle"))
+        .toast(isPresented: $isShowingSendSuccess, title: "Envoyé", icon: Image(systemName: "checkmark.circle"))
+        .toast(isPresented: $isShowingSaveSuccess, title: "Enregistré", icon: Image(systemName: "checkmark.circle"))
     }
 
     private func setStateWithLastSelection() {
