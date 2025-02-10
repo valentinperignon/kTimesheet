@@ -33,8 +33,12 @@ struct ActivitiesView: View {
                 VStack(alignment: .leading) {
                     ActivitiesHeader(activities: activities)
 
-                    ForEach(activities) { activity in
-                        ActivityView(activity: activity)
+                    if activities.isEmpty {
+                        EmptyStateView(title: "Aucune activité à l'horizon")
+                    } else {
+                        ForEach(activities) { activity in
+                            ActivityView(activity: activity)
+                        }
                     }
                 }
             }
