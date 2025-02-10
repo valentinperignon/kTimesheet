@@ -56,12 +56,10 @@ struct FormView: View {
             .disabled(epics.isEmpty)
             .task(id: epicID) {
                 guard selectedEpic != .unknown else { return }
-                guard selectedSubject != nil else {
-                    subjectID = Subject.unknown.id
-                    return
-                }
-
-                try? await jiraManager.fetchIssues(of: epicID)
+                try? await jiraManager.fetchSubjects(of: epicID)
+            }
+            .onChange(of: epicID) { _, _ in
+                subjectID = Subject.unknown.id
             }
 
             Picker("Sujet", selection: $subjectID) {
