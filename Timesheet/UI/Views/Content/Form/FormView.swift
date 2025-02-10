@@ -59,6 +59,7 @@ struct FormView: View {
                 try? await jiraManager.fetchSubjects(of: epicID)
             }
             .onChange(of: epicID) { _, _ in
+                guard !selectedEpic.subjects.contains(where: { $0.id == subjectID }) else { return }
                 subjectID = Subject.unknown.id
             }
 
