@@ -10,72 +10,15 @@ import ToastView
 import SwiftUI
 
 struct ActivitiesView: View {
-    @Environment(JiraManager.self) private var jiraManager
-    @Environment(ActivityManager.self) private var activityManager
-
-    @ObservedResults(
-        Activity.self,
-        filter: NSPredicate(format: "date >= %@", Calendar.current.startOfDay(for: .now) as CVarArg),
-        sortDescriptor: SortDescriptor(keyPath: "subject.summary", ascending: true)
-    ) private var activities
-
-    @State private var isSendingForm = false
-    @State private var isShowingSuccess = false
-    @State private var isShowingError = false
-
-    private var containsDraft: Bool {
-        return activities.contains { $0.draft }
-    }
+    @State private var date = Date.now
 
     var body: some View {
-        VStack(alignment: .leading) {
-            if activities.isEmpty {
-                EmptyStateView(title: "Aucune activité à l'horizon")
-            } else {
-                ActivitiesHeader(activities: activities)
-                
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ForEach(activities) { activity in
-                            ActivityView(activity: activity)
-                        }
-                    }
-                }
+        VStack {
+            DatePicker("Date à afficher", selection: $date, displayedComponents: .date)
+                .datePickerStyle(.stepperField)
+                .labelsHidden()
 
-                if containsDraft {
-                    LoadingButton(
-                        label: "Envoyer",
-                        systemImage: "checkmark.circle",
-                        isLoading: isSendingForm,
-                        action: sendDrafts
-                    )
-                    .controlSize(.large)
-                }
-            }
-        }
-        .toast(isPresented: $isShowingError, title: "Error", icon: Image(systemName: "xmark.circle"))
-        .toast(isPresented: $isShowingSuccess, title: "checkmark.circle", icon: Image(systemName: "checkmark.circle"))
-    }
-
-    private func sendDrafts() {
-        Task {
-            isSendingForm = true
-
-            let drafts = Array(activities.where { $0.draft })
-            for draft in drafts {
-                do {
-                    guard let subject = draft.subject else { continue }
-
-                    let (hours, minutes) = DurationHelper(duration: draft.duration).transformToHoursAndMinutes()
-                    try await jiraManager.sendTime(subject: subject, hours: hours, minutes: minutes, comment: draft.comment)
-                    activityManager.markAsSent(activity: draft)
-                } catch {
-                    isShowingError = true
-                    break
-                }
-            }
-
-            isSendingForm = false
+            ActivitiesListView(date: date)
         }
     }
 }
