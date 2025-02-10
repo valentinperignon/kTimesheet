@@ -1,5 +1,5 @@
 {
-  "originHash" : "7d2d5110c0f5a4b229a32186c75a816baf0cd26dc2fb5e18895619084ea8c07a",
+  "originHash" : "a7ded5ed4283825b6010925fca173aa81a25bfd9183f5c45c7d4257703c88a84",
   "pins" : [
     {
       "identity" : "keychainaccess",
@@ -29,12 +29,12 @@
       }
     },
     {
-      "identity" : "simpletoast",
+      "identity" : "toastview",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sanzaru/SimpleToast.git",
+      "location" : "git@github.com:PhilippeWeidmann/ToastView.git",
       "state" : {
-        "revision" : "99330cceeea6a9068d40ccbe27efb75d240098ef",
-        "version" : "0.10.1"
+        "branch" : "master",
+        "revision" : "564087d21728dc3dd228b6a46eac7aced00ded3e"
       }
     }
   ],

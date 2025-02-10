@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A7F523122D5A75E7005DF5C1 /* ToastView in Frameworks */ = {isa = PBXBuildFile; productRef = A7F523112D5A75E7005DF5C1 /* ToastView */; };
 		F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = F943149A2D56AE0700382FB9 /* KeychainAccess */; };
 		F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; };
 		F9447ECB2D540BD100E0779D /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		F9E2ABE62D53DDD30041FD1E /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = F9E2ABE52D53DDD30041FD1E /* SimpleToast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,8 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7F523122D5A75E7005DF5C1 /* ToastView in Frameworks */,
 				F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */,
-				F9E2ABE62D53DDD30041FD1E /* SimpleToast in Frameworks */,
 				F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,9 +90,9 @@
 			);
 			name = kTimesheet;
 			packageProductDependencies = (
-				F9E2ABE52D53DDD30041FD1E /* SimpleToast */,
 				F9447EC72D540A2800E0779D /* RealmSwift */,
 				F943149A2D56AE0700382FB9 /* KeychainAccess */,
+				A7F523112D5A75E7005DF5C1 /* ToastView */,
 			);
 			productName = Timesheet;
 			productReference = F92EAB042D52667600D8F7C2 /* kTimesheet.app */;
@@ -123,9 +123,9 @@
 			mainGroup = F92EAAFB2D52667600D8F7C2;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */,
 				F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */,
 				F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				A7F523102D5A75E7005DF5C1 /* XCRemoteSwiftPackageReference "ToastView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F92EAB052D52667600D8F7C2 /* Products */;
@@ -362,6 +362,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A7F523102D5A75E7005DF5C1 /* XCRemoteSwiftPackageReference "ToastView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:PhilippeWeidmann/ToastView.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
@@ -378,17 +386,14 @@
 				minimumVersion = 20.0.0;
 			};
 		};
-		F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sanzaru/SimpleToast.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A7F523112D5A75E7005DF5C1 /* ToastView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A7F523102D5A75E7005DF5C1 /* XCRemoteSwiftPackageReference "ToastView" */;
+			productName = ToastView;
+		};
 		F943149A2D56AE0700382FB9 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
@@ -398,11 +403,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
-		};
-		F9E2ABE52D53DDD30041FD1E /* SimpleToast */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F9E2ABE42D53DDD30041FD1E /* XCRemoteSwiftPackageReference "SimpleToast" */;
-			productName = SimpleToast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
