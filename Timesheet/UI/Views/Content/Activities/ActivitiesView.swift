@@ -29,29 +29,28 @@ struct ActivitiesView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    ActivitiesHeader(activities: activities)
-
-                    if activities.isEmpty {
-                        EmptyStateView(title: "Aucune activité à l'horizon")
-                    } else {
+            if activities.isEmpty {
+                EmptyStateView(title: "Aucune activité à l'horizon")
+            } else {
+                ActivitiesHeader(activities: activities)
+                
+                ScrollView {
+                    VStack(alignment: .leading) {
                         ForEach(activities) { activity in
                             ActivityView(activity: activity)
                         }
                     }
                 }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
 
-            if containsDraft {
-                LoadingButton(
-                    label: "Envoyer",
-                    systemImage: "checkmark.circle",
-                    isLoading: isSendingForm,
-                    action: sendDrafts
-                )
-                .controlSize(.large)
+                if containsDraft {
+                    LoadingButton(
+                        label: "Envoyer",
+                        systemImage: "checkmark.circle",
+                        isLoading: isSendingForm,
+                        action: sendDrafts
+                    )
+                    .controlSize(.large)
+                }
             }
         }
         .toast(isPresented: $isShowingError, title: "Error", icon: Image(systemName: "xmark.circle"))
