@@ -24,9 +24,13 @@ struct JiraFetcher {
         setupAuthenticatedSession(for: user)
     }
 
-    func makeRequest(path: String, method: RequestMethod = .post, parameters: Codable? = nil) throws -> URLRequest {
+    func makeRequest(path: String, method: RequestMethod = .post, queryItems: [URLQueryItem]? = nil, parameters: Codable? = nil) throws -> URLRequest {
         var urlComponents = URLComponents(string: baseURL)
         urlComponents?.path.append(path)
+
+        if let queryItems {
+            urlComponents?.queryItems = queryItems
+        }
 
         guard let url = urlComponents?.url else {
             throw DomainError.invalidURL

@@ -59,6 +59,10 @@ final class JiraManager {
     func sendTime(subject: Subject, hours: Int, minutes: Int, comment: String) async throws {
         let request = try jiraFetcher.makeRequest(
             path: "/rest/api/2/issue/\(subject.id)/worklog",
+            queryItems: [
+                URLQueryItem(name: "adjustEstimate", value: "new"),
+                URLQueryItem(name: "newEstimate", value: "0m")
+            ],
             parameters: TimesheetData(hours: hours, minutes: minutes, comment: comment)
         )
         _ = try await jiraFetcher.performRequest(request)
