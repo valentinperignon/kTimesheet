@@ -38,7 +38,7 @@ struct ActivitiesListView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if activities.isEmpty {
-                EmptyStateView(title: "Aucune activité à l'horizon")
+                ActivitiesEmptyState()
             } else {
                 ActivitiesHeader(activities: activities)
 
