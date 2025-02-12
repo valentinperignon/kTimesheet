@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct EmptyStateView: View {
-    private let emptyStateSymbols = ["figure.run.treadmill", "figure.fall", "figure.american.football", "figure.badminton", "figure.cooldown"]
-
+    let icon: Image
     let title: String
 
     var body: some View {
         VStack(spacing: 12) {
-            Image(systemName: emptyStateSymbols.randomElement()!)
-                .font(.largeTitle)
+            icon
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32)
+
             Text(title)
                 .font(.title2)
         }
@@ -26,5 +28,5 @@ struct EmptyStateView: View {
 }
 
 #Preview {
-    EmptyStateView(title: "Hello, World")
+    EmptyStateView(icon: Image(systemName: "figure.run.treadmill"), title: "Hello, World")
 }
