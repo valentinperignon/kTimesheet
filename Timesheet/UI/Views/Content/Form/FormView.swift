@@ -76,8 +76,8 @@ struct FormView: View {
 
             DatePicker("Temps", selection: $duration, displayedComponents: .hourAndMinute)
 
-            TextField("Commentaire", text: $comment)
-                .textFieldStyle(.roundedBorder)
+            TextField("Commentaire", text: $comment, axis: .vertical)
+                .lineLimit(2...)
                 .padding(.bottom, 8)
 
             HStack {
