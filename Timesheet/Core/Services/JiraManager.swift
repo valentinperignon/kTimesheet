@@ -14,6 +14,10 @@ import RealmSwift
 final class JiraManager {
     private let jiraFetcher: JiraFetcher
 
+    enum DomainError: Error {
+        case subjectNotFound
+    }
+
     init(jiraFetcher: JiraFetcher) {
         self.jiraFetcher = jiraFetcher
     }
@@ -56,14 +60,21 @@ final class JiraManager {
         }
     }
 
-    func sendTime(subject: Subject, hours: Int, minutes: Int, comment: String) async throws {
+    func sendTime(from activity: Activity) async throws {
+        guard let subject = activity.subject else { throw DomainError.subjectNotFound }
+
+        let (hours, minutes) = DurationHelper(duration: activity.duration).transformToHoursAndMinutes()
+        try await sendTime(subject: subject, hours: hours, minutes: minutes, date: activity.date, comment: activity.comment)
+    }
+
+    func sendTime(subject: Subject, hours: Int, minutes: Int, date: Date, comment: String) async throws {
         let request = try jiraFetcher.makeRequest(
             path: "/rest/api/2/issue/\(subject.id)/worklog",
             queryItems: [
                 URLQueryItem(name: "adjustEstimate", value: "new"),
                 URLQueryItem(name: "newEstimate", value: "0m")
             ],
-            parameters: TimesheetData(hours: hours, minutes: minutes, comment: comment)
+            parameters: TimesheetData(hours: hours, minutes: minutes, date: date, comment: comment)
         )
         _ = try await jiraFetcher.performRequest(request)
     }

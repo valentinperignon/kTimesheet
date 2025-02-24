@@ -22,6 +22,7 @@ struct FormView: View {
     @State private var epicID = Epic.unknown.id
     @State private var subjectID = Subject.unknown.id
     @State private var duration = Calendar.current.startOfDay(for: .now)
+    @State private var date = Date.now
     @State private var comment = ""
 
     @State private var isSendingForm = false
@@ -76,6 +77,8 @@ struct FormView: View {
 
             DatePicker("Temps", selection: $duration, displayedComponents: .hourAndMinute)
 
+            DatePicker("Date", selection: $date)
+
             TextField("Commentaire", text: $comment, axis: .vertical)
                 .lineLimit(2...)
                 .padding(.bottom, 8)
@@ -122,23 +125,30 @@ struct FormView: View {
                 let timeInterval = durationHelper.transformToTimeInterval()
 
                 isSendingForm = true
-                try await jiraManager.sendTime(subject: selectedSubject, hours: hours, minutes: minutes, comment: comment)
+                try await jiraManager.sendTime(
+                    subject: selectedSubject,
+                    hours: hours,
+                    minutes: minutes,
+                    date: date,
+                    comment: comment
+                )
                 activityManager.addActivity(
                     subject: selectedSubject,
                     duration: timeInterval,
                     comment: comment,
-                    date: .now,
+                    date: date,
                     draft: false
                 )
                 isSendingForm = false
 
                 isShowingSendSuccess = true
+
+                resetForm()
             } catch {
                 isShowingError = true
             }
 
             saveChoice()
-            resetForm()
         }
     }
 
@@ -148,7 +158,7 @@ struct FormView: View {
         let durationHelper = DurationHelper(date: duration)
         let timeInterval = durationHelper.transformToTimeInterval()
 
-        activityManager.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: .now, draft: true)
+        activityManager.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: date, draft: true)
 
         isShowingSaveSuccess = true
 
@@ -163,6 +173,7 @@ struct FormView: View {
 
     private func resetForm() {
         duration = Calendar.current.startOfDay(for: .now)
+        date = .now
         comment = ""
     }
 }

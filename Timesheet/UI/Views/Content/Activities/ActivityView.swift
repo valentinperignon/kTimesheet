@@ -30,8 +30,18 @@ struct ActivityView: View {
                     .buttonStyle(.plain)
                 }
             }
+            .padding(.bottom, 2)
 
-            DurationView(duration: activity.duration)
+            HStack {
+                HStack(spacing: 4) {
+                    Image(systemName: "calendar")
+                        .foregroundStyle(.secondary)
+
+                    Text(activity.date, format: .dateTime.hour().minute())
+                }
+
+                DurationView(duration: activity.duration)
+            }
 
             if !activity.comment.isEmpty {
                 HStack(spacing: 4) {

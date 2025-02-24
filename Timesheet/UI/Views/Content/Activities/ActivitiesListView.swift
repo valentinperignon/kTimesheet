@@ -72,10 +72,7 @@ struct ActivitiesListView: View {
             let drafts = Array(activities.where { $0.draft })
             for draft in drafts {
                 do {
-                    guard let subject = draft.subject else { continue }
-
-                    let (hours, minutes) = DurationHelper(duration: draft.duration).transformToHoursAndMinutes()
-                    try await jiraManager.sendTime(subject: subject, hours: hours, minutes: minutes, comment: draft.comment)
+                    try await jiraManager.sendTime(from: draft)
                     activityManager.markAsSent(activity: draft)
                 } catch {
                     isShowingError = true
