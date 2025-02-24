@@ -12,12 +12,12 @@ import RealmSwift
 @Observable
 final class ActivityManager {
     func addActivity(subject: Subject, duration: TimeInterval, comment: String, date: Date, draft: Bool) {
-        let foundActivity = fetchActivity(subject: subject, comment: comment, date: date, draft: draft)
+        let realm = try! Realm()
+        try? realm.write {
+            guard let liveSubject = realm.object(ofType: Subject.self, forPrimaryKey: subject.id) else { return }
 
-        if let foundActivity {
-            editActivity(activity: foundActivity, duration: duration)
-        } else {
-            createNewActivity(subject: subject, duration: duration, comment: comment, date: date, draft: draft)
+            let activity = Activity(subject: liveSubject, duration: duration, comment: comment, date: date, draft: draft)
+            realm.add(activity)
         }
     }
 
@@ -25,14 +25,7 @@ final class ActivityManager {
         let realm = try! Realm()
         try? realm.write {
             guard let liveActivity = realm.object(ofType: Activity.self, forPrimaryKey: activity.id) else { return }
-
-            if let subject = activity.subject,
-               let nonDraftActivity = fetchActivity(subject: subject, comment: activity.comment, date: activity.date, draft: false) {
-                realm.delete(liveActivity)
-                nonDraftActivity.duration += activity.duration
-            } else {
-                liveActivity.draft = false
-            }
+            liveActivity.draft = false
         }
     }
 
@@ -54,22 +47,5 @@ final class ActivityManager {
         }
 
         return foundActivities.first
-    }
-
-    private func createNewActivity(subject: Subject, duration: TimeInterval, comment: String, date: Date, draft: Bool) {
-        let realm = try! Realm()
-        try? realm.write {
-            guard let liveSubject = realm.object(ofType: Subject.self, forPrimaryKey: subject.id) else { return }
-
-            let activity = Activity(subject: liveSubject, duration: duration, comment: comment, date: date, draft: draft)
-            realm.add(activity)
-        }
-    }
-
-    private func editActivity(activity: Activity, duration: TimeInterval) {
-        let realm = try! Realm()
-        try? realm.write {
-            activity.duration += duration
-        }
     }
 }

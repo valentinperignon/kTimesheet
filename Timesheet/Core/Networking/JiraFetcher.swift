@@ -9,6 +9,11 @@ import Foundation
 
 struct JiraFetcher {
     private let baseURL = "https://infomaniak.atlassian.net"
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return formatter
+    }()
 
     private var authenticatedSession: URLSession!
 
@@ -43,6 +48,7 @@ struct JiraFetcher {
 
         if let parameters {
             let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .formatted(dateFormatter)
             let data = try encoder.encode(parameters)
             urlRequest.httpBody = data
         }
