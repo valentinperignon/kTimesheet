@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A79963402D9C755D008263AE /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A799633F2D9C755D008263AE /* Sentry */; };
 		A7F523122D5A75E7005DF5C1 /* ToastView in Frameworks */ = {isa = PBXBuildFile; productRef = A7F523112D5A75E7005DF5C1 /* ToastView */; };
 		F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = F943149A2D56AE0700382FB9 /* KeychainAccess */; };
 		F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; };
@@ -48,6 +49,7 @@
 				A7F523122D5A75E7005DF5C1 /* ToastView in Frameworks */,
 				F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */,
 				F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */,
+				A79963402D9C755D008263AE /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +97,7 @@
 				F9447EC72D540A2800E0779D /* RealmSwift */,
 				F943149A2D56AE0700382FB9 /* KeychainAccess */,
 				A7F523112D5A75E7005DF5C1 /* ToastView */,
+				A799633F2D9C755D008263AE /* Sentry */,
 			);
 			productName = Timesheet;
 			productReference = F92EAB042D52667600D8F7C2 /* kTimesheet.app */;
@@ -128,6 +131,7 @@
 				F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */,
 				F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				A7F523102D5A75E7005DF5C1 /* XCRemoteSwiftPackageReference "ToastView" */,
+				A799633E2D9C755D008263AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F92EAB052D52667600D8F7C2 /* Products */;
@@ -366,6 +370,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A799633E2D9C755D008263AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.48.0;
+			};
+		};
 		A7F523102D5A75E7005DF5C1 /* XCRemoteSwiftPackageReference "ToastView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:PhilippeWeidmann/ToastView.git";
@@ -393,6 +405,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A799633F2D9C755D008263AE /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A799633E2D9C755D008263AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
 		A7F523112D5A75E7005DF5C1 /* ToastView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A7F523102D5A75E7005DF5C1 /* XCRemoteSwiftPackageReference "ToastView" */;

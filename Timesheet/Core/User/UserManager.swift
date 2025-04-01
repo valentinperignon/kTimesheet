@@ -7,11 +7,14 @@
 
 import Foundation
 import Observation
+import Sentry
 
 @Observable @MainActor
 final class UserManager {
     private(set) var currentUser: User? {
         didSet {
+            setupSentryUser()
+
             setupCurrentJiraFetcher()
             setupCurrentJiraManager()
         }
@@ -72,5 +75,15 @@ extension UserManager {
         }
 
         jiraManager = JiraManager(jiraFetcher: jiraFetcher)
+    }
+
+    private func setupSentryUser() {
+        guard let currentUser else {
+            SentrySDK.setUser(nil)
+            return
+        }
+
+        let sentryUser = Sentry.User(userId: currentUser.username)
+        SentrySDK.setUser(sentryUser)
     }
 }
