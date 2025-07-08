@@ -1,5 +1,5 @@
 {
-  "originHash" : "f63ff3bc0d804d76737ff6f5020a9d454458375b412b5d15890b6cd92888de72",
+  "originHash" : "32f726bcd51c0da32400c405806857294facd4f83fd691742388a8e8bdc0660d",
   "pins" : [
     {
       "identity" : "keychainaccess",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-swift",
       "state" : {
-        "revision" : "bae6c4be7df169fdb047d0ad63f902c1e2665e83",
-        "version" : "20.0.1"
+        "revision" : "6260534683132eb981338c7c39fd5e69205876e6",
+        "version" : "20.0.3"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa",
       "state" : {
-        "revision" : "4589f82132097558d386710b139bfe9c35c64d4a",
-        "version" : "8.48.0"
+        "revision" : "56fb914f14922efeda6c744c0125696552b6d2b5",
+        "version" : "8.53.1"
       }
     },
     {
