@@ -32,6 +32,9 @@ struct LoginView: View {
 
     var body: some View {
         Form {
+            Text("kTimeSheet")
+                .font(.title)
+
             TextField("Email", text: $username)
                 .textFieldStyle(.roundedBorder)
                 .textContentType(.emailAddress)
