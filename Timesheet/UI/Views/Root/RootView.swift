@@ -29,6 +29,7 @@ struct RootView: View {
         .environment(userManager)
         .environment(rootViewModel)
         .environment(activityManager)
+        .frame(width: 350, height: 350)
     }
 }
 

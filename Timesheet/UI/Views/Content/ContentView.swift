@@ -32,7 +32,7 @@ struct ContentView: View {
     @State private var contentType = ContentType.form
 
     var body: some View {
-        NavigationStack {
+        ScrollView {
             VStack {
                 HStack {
                     Text("Timesheet")
@@ -67,6 +67,7 @@ struct ContentView: View {
                 try? await jiraManager.fetchEpics()
             }
         }
+        .scrollBounceBehavior(.basedOnSize)
     }
 
     private func openSettings() {
@@ -76,5 +77,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(RootViewModel())
         .environment(PreviewHelper.jiraManager)
 }
