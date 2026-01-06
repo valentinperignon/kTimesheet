@@ -24,8 +24,11 @@ final class JiraManager {
 
     func fetchEpics() async throws {
         let request = try jiraFetcher.makeRequest(
-            path: "/rest/api/2/search",
-            parameters: ["jql": "project=TIM AND issueType=Epic"]
+            path: "/rest/api/3/search/jql",
+            parameters: SearchParameters(
+                jql: "project=TIM AND issueType=Epic",
+                fields: ["summary"]
+            )
         )
         let result: SearchResultAPI = try await jiraFetcher.performRequest(request)
 
@@ -43,8 +46,11 @@ final class JiraManager {
 
     func fetchSubjects(of epicID: String) async throws {
         let request = try jiraFetcher.makeRequest(
-            path: "/rest/api/2/search",
-            parameters: ["jql": "project=TIM AND parentEpic=\(epicID)"]
+            path: "/rest/api/3/search/jql",
+            parameters: SearchParameters(
+                jql: "project=TIM AND parentEpic=\(epicID)",
+                fields: ["summary"]
+            )
         )
         let result: SearchResultAPI = try await jiraFetcher.performRequest(request)
 
