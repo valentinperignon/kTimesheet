@@ -20,8 +20,6 @@ final class RootViewModel {
     var state = RootViewState.hello
 
     func transition(to state: RootViewState) {
-        withAnimation {
-            self.state = state
-        }
+        self.state = state
     }
 }
