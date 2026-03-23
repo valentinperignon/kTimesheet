@@ -11,10 +11,11 @@ import Realm
 import RealmSwift
 
 @Observable
-final class JiraManager {
+final class JiraManager: Sendable {
     private let jiraFetcher: JiraFetcher
 
     enum DomainError: Error {
+        case activityNotFound
         case subjectNotFound
     }
 
@@ -66,7 +67,12 @@ final class JiraManager {
         }
     }
 
-    func sendTime(from activity: Activity) async throws {
+    func sendTime(for activityID: ObjectId) async throws {
+        let realm = getRealm()
+        guard let activity = realm.object(ofType: Activity.self, forPrimaryKey: activityID) else {
+            throw DomainError.activityNotFound
+        }
+        
         guard let subject = activity.subject else { throw DomainError.subjectNotFound }
 
         let (hours, minutes) = DurationHelper(duration: activity.duration).transformToHoursAndMinutes()

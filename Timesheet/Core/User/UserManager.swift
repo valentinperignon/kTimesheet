@@ -9,7 +9,7 @@ import Foundation
 import Observation
 import Sentry
 
-@Observable @MainActor
+@MainActor
 final class UserManager {
     private(set) var currentUser: User? {
         didSet {
@@ -23,6 +23,10 @@ final class UserManager {
     private(set) var jiraManager: JiraManager?
 
     private let userStore = UserStore()
+    
+    static let shared = UserManager()
+    
+    init() {}
 
     func saveUser(username: String, token: String) async throws {
         try await userStore.saveUser(username: username, token: token)
@@ -56,9 +60,7 @@ final class UserManager {
         UserDefaults.standard.currentUsername = nil
         currentUser = nil
     }
-}
 
-extension UserManager {
     private func setupCurrentJiraFetcher() {
         guard let currentUser else {
             jiraFetcher = nil

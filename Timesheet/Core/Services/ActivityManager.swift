@@ -9,8 +9,9 @@ import Foundation
 import Observation
 import RealmSwift
 
-@Observable
-final class ActivityManager {
+final class ActivityManager: Sendable {
+    static let shared = ActivityManager()
+    
     func addActivity(subject: Subject, duration: TimeInterval, comment: String, date: Date, draft: Bool) {
         let realm = try! Realm()
         try? realm.write {
