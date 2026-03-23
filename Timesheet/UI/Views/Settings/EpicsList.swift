@@ -13,8 +13,8 @@ struct EpicsList: View {
 
     var body: some View {
         Table(epics) {
-            TableColumn("Nom", value: \.summary)
-            TableColumn("Affiché") { EpicToggle(epic: $0) }
+            TableColumn(.tableName, value: \.summary)
+            TableColumn(.tableShowing) { EpicToggle(epic: $0) }
         }
     }
 }
@@ -30,7 +30,7 @@ struct EpicToggle: View {
     }
 
     var body: some View {
-        Toggle("", isOn: $isShowing)
+        Toggle(.settingsEpicShowing, isOn: $isShowing)
             .toggleStyle(.checkbox)
             .onChange(of: isShowing) { _, newValue in
                 let realm = try! Realm()

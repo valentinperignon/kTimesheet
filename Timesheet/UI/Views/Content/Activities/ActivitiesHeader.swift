@@ -17,7 +17,7 @@ struct ActivitiesHeader: View {
 
     var body: some View {
         HStack {
-            Text("\(activities.count) \(activities(activities.count))")
+            Text("\(activities.count) \(String(localized: activities.count > 1 ? "activity.plural" : "activity.singular"))")
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             DurationView(duration: totalTime)
@@ -25,7 +25,4 @@ struct ActivitiesHeader: View {
         .font(.headline)
     }
 
-    private func activities(_ count: Int) -> String {
-        return count > 1 ? "activités" : "activité"
-    }
 }

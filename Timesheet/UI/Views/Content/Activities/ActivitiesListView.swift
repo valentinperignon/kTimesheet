@@ -51,7 +51,7 @@ struct ActivitiesListView: View {
 
                 if containsDraft {
                     LoadingButton(
-                        label: "Envoyer",
+                        label: .buttonSend,
                         systemImage: "checkmark.circle",
                         isLoading: isSendingForm,
                         action: sendDrafts
@@ -60,8 +60,8 @@ struct ActivitiesListView: View {
                 }
             }
         }
-        .toast(isPresented: $isShowingError, title: "Error", icon: Image(systemName: "xmark.circle"))
-        .toast(isPresented: $isShowingSuccess, title: "checkmark.circle", icon: Image(systemName: "checkmark.circle"))
+        .toast(isPresented: $isShowingError, title: String(localized: .toastError), icon: Image(systemName: "xmark.circle"))
+        .toast(isPresented: $isShowingSuccess, title: String(localized: .toastSent), icon: Image(systemName: "checkmark.circle"))
     }
 
     private func sendDrafts() {

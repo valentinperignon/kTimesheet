@@ -50,7 +50,7 @@ struct ActivityView: View {
             }
 
             if activity.draft {
-                Text("Brouillon")
+                Text(.labelDraft)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
                     .font(.caption)

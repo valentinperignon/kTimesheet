@@ -24,7 +24,7 @@ struct ActivitiesEmptyState: View {
     var body: some View {
         EmptyStateView(
             icon: Image(images.randomElement()!),
-            title: "Aucune activité à l'horizon"
+            title: .activitiesEmptyTitle
         )
     }
 }

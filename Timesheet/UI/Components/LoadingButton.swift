@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadingButton: View {
-    let label: String
+    let label: LocalizedStringResource
     let systemImage: String
     let isLoading: Bool
     let action: () -> Void

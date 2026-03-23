@@ -15,12 +15,12 @@ enum ContentType: String, Identifiable, CaseIterable {
 
     var id: String { rawValue }
 
-    var label: LocalizedStringKey {
+    var label: LocalizedStringResource {
         switch self {
         case .form:
-            return "Formulaire"
+            return .tabForm
         case .activity:
-            return "Mon Activité"
+            return .tabActivity
         }
     }
 }
@@ -40,12 +40,12 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     Button(action: openSettings) {
-                        Label("Paramètres", systemImage: "gear")
+                        Label(.settingsTitle, systemImage: "gear")
                             .labelStyle(.iconOnly)
                     }
                 }
 
-                Picker("Type de contenu", selection: $contentType) {
+                Picker(.pickerContentType, selection: $contentType) {
                     ForEach(ContentType.allCases) { contentType in
                         Text(contentType.label)
                             .tag(contentType)

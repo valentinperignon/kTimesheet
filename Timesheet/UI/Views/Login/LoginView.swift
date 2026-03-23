@@ -33,32 +33,32 @@ struct LoginView: View {
             Text(verbatim: "kTimeSheet")
                 .font(.title)
 
-            TextField("Email", text: $username)
+            TextField("field.email", text: $username)
                 .textFieldStyle(.roundedBorder)
                 .textContentType(.emailAddress)
                 .onSubmit(login)
 
-            SecureField("Token", text: $token)
+            SecureField(.fieldToken, text: $token)
                 .textFieldStyle(.roundedBorder)
                 .textContentType(.password)
                 .onSubmit(login)
 
             Button(action: didTapHelpButton) {
-                Text("Pas de token Atlassian ?")
+                Text(.buttonNoAtlassianToken)
                     .font(.caption)
             }
             .buttonStyle(.link)
             .padding(.bottom, 8)
 
             Button(action: login) {
-                Label("Se connecter", systemImage: "person")
+                Label(.buttonLogin, systemImage: "person")
             }
             .buttonStyle(.bordered)
             .controlSize(.large)
             .disabled(!isFormValid)
         }
         .padding()
-        .toast(isPresented: $isShowingError, title: "Erreur", icon: Image(systemName: "xmark"))
+        .toast(isPresented: $isShowingError, title: String(localized: .toastError), icon: Image(systemName: "xmark"))
     }
 
     private func didTapHelpButton() {
