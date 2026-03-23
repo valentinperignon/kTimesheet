@@ -62,6 +62,7 @@ struct ContentView: View {
                     ActivitiesView()
                 }
             }
+            .frame(minWidth: 325)
             .padding()
             .task {
                 try? await jiraManager.fetchEpics()
