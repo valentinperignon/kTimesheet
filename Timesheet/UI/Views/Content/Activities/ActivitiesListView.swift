@@ -72,7 +72,7 @@ struct ActivitiesListView: View {
             for draft in drafts {
                 do {
                     try await jiraManager.sendTime(for: draft.id)
-                    ActivityManager.shared.markAsSent(activity: draft)
+                    ActivityRepository.shared.markAsSent(activity: draft)
                 } catch {
                     isShowingError = true
                     break

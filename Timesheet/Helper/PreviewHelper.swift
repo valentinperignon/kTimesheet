@@ -10,5 +10,5 @@ import Foundation
 enum PreviewHelper {
     static let jiraManager = JiraManager(jiraFetcher: JiraFetcher(user: User(username: "a", token: "a")))
 
-    static let activityManager = ActivityManager.shared
+    static let activityRepository = ActivityRepository.shared
 }

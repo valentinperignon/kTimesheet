@@ -9,8 +9,8 @@ import Foundation
 import Observation
 import RealmSwift
 
-final class ActivityManager: Sendable {
-    static let shared = ActivityManager()
+final class ActivityRepository: Sendable {
+    static let shared = ActivityRepository()
     
     func addActivity(subject: Subject, duration: TimeInterval, comment: String, date: Date, draft: Bool) {
         let realm = try! Realm()

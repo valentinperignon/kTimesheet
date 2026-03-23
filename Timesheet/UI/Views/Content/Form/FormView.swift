@@ -131,7 +131,7 @@ struct FormView: View {
                     date: date,
                     comment: comment
                 )
-                ActivityManager.shared.addActivity(
+                ActivityRepository.shared.addActivity(
                     subject: selectedSubject,
                     duration: timeInterval,
                     comment: comment,
@@ -157,7 +157,7 @@ struct FormView: View {
         let durationHelper = DurationHelper(date: duration)
         let timeInterval = durationHelper.transformToTimeInterval()
 
-        ActivityManager.shared.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: date, draft: true)
+        ActivityRepository.shared.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: date, draft: true)
 
         isShowingSaveSuccess = true
 

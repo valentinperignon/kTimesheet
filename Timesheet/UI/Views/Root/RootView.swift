@@ -9,7 +9,6 @@ import SwiftUI
 
 struct RootView: View {
     @State private var rootViewModel = RootViewModel()
-    @State private var activityManager = ActivityManager()
 
     var body: some View {
         ZStack {
