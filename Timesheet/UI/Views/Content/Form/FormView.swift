@@ -11,7 +11,6 @@ import SwiftUI
 
 struct FormView: View {
     @Environment(JiraManager.self) private var jiraManager
-    @Environment(ActivityManager.self) private var activityManager
 
     @ObservedResults(
         Epic.self,
@@ -132,7 +131,7 @@ struct FormView: View {
                     date: date,
                     comment: comment
                 )
-                activityManager.addActivity(
+                ActivityManager.shared.addActivity(
                     subject: selectedSubject,
                     duration: timeInterval,
                     comment: comment,
@@ -158,7 +157,7 @@ struct FormView: View {
         let durationHelper = DurationHelper(date: duration)
         let timeInterval = durationHelper.transformToTimeInterval()
 
-        activityManager.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: date, draft: true)
+        ActivityManager.shared.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: date, draft: true)
 
         isShowingSaveSuccess = true
 
@@ -181,5 +180,4 @@ struct FormView: View {
 #Preview {
     FormView()
         .environment(PreviewHelper.jiraManager)
-        .environment(PreviewHelper.activityManager)
 }

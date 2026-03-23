@@ -26,6 +26,5 @@ struct ActivitiesView: View {
 #Preview {
     ActivitiesView()
         .environment(PreviewHelper.jiraManager)
-        .environment(PreviewHelper.activityManager)
 }
 

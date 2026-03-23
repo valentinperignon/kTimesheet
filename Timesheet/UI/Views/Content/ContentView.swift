@@ -35,7 +35,7 @@ struct ContentView: View {
         ScrollView {
             VStack {
                 HStack {
-                    Text("Timesheet")
+                    Text(verbatim: "kTimesheet")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .leading)
 

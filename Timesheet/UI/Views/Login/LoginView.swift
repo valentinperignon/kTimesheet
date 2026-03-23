@@ -10,8 +10,6 @@ import SwiftUI
 
 struct LoginView: View {
     @Environment(\.openURL) private var openURL
-
-    @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
     @State private var username = ""
@@ -32,7 +30,7 @@ struct LoginView: View {
 
     var body: some View {
         Form {
-            Text("kTimeSheet")
+            Text(verbatim: "kTimeSheet")
                 .font(.title)
 
             TextField("Email", text: $username)
@@ -72,15 +70,14 @@ struct LoginView: View {
 
         Task {
             do {
-                try await userManager.saveUser(username: trimmedUsername, token: trimmedToken)
-                guard let jiraManager = userManager.jiraManager else {
+                try await UserManager.shared.saveUser(username: trimmedUsername, token: trimmedToken)
+                guard let jiraManager = UserManager.shared.jiraManager else {
                     return
                 }
                 
                 rootViewModel.transition(to: .content(jiraManager))
             } catch {
                 isShowingError = true
-                print("The following error occurred: \(error)")
             }
         }
     }

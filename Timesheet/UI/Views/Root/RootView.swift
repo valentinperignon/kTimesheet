@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var userManager = UserManager()
     @State private var rootViewModel = RootViewModel()
     @State private var activityManager = ActivityManager()
 
@@ -26,9 +25,7 @@ struct RootView: View {
                 SettingsView()
             }
         }
-        .environment(userManager)
         .environment(rootViewModel)
-        .environment(activityManager)
     }
 }
 

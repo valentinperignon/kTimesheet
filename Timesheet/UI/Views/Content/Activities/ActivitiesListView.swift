@@ -11,7 +11,6 @@ import SwiftUI
 
 struct ActivitiesListView: View {
     @Environment(JiraManager.self) private var jiraManager
-    @Environment(ActivityManager.self) private var activityManager
 
     @ObservedResults(Activity.self) private var activities
 
@@ -72,8 +71,8 @@ struct ActivitiesListView: View {
             let drafts = Array(activities.where { $0.draft })
             for draft in drafts {
                 do {
-                    try await jiraManager.sendTime(from: draft)
-                    activityManager.markAsSent(activity: draft)
+                    try await jiraManager.sendTime(for: draft.id)
+                    ActivityManager.shared.markAsSent(activity: draft)
                 } catch {
                     isShowingError = true
                     break

@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ActivityView: View {
-    @Environment(ActivityManager.self) private var activityManager
-
     let activity: Activity
 
     private var color: Color {
@@ -73,7 +71,7 @@ struct ActivityView: View {
     }
 
     private func deleteActivity() {
-        activityManager.deleteActivity(activity: activity)
+        ActivityManager.shared.deleteActivity(activity: activity)
     }
 }
 

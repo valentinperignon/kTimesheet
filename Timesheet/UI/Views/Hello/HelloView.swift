@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct HelloView: View {
-    @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
     var body: some View {
@@ -29,8 +28,8 @@ struct HelloView: View {
         }
         .padding()
         .task {
-            if (try? await userManager.setCurrentUser()) != nil,
-               let jiraManager = userManager.jiraManager {
+            let currentUser = try? await UserManager.shared.setCurrentUser()
+            if currentUser != nil, let jiraManager = UserManager.shared.jiraManager {
                 rootViewModel.transition(to: .content(jiraManager))
             } else {
                 rootViewModel.transition(to: .login)

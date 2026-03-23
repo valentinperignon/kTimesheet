@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(UserManager.self) private var userManager
     @Environment(RootViewModel.self) private var rootViewModel
 
     var body: some View {
@@ -40,13 +39,15 @@ struct SettingsView: View {
     }
 
     private func back() {
-        guard let jiraManager = userManager.jiraManager else { return }
+        guard let jiraManager = UserManager.shared.jiraManager else {
+            return
+        }
         rootViewModel.transition(to: .content(jiraManager))
     }
 
     private func logout() {
         Task {
-            try await userManager.removeCurrentUser()
+            try await UserManager.shared.removeCurrentUser()
             rootViewModel.transition(to: .login)
         }
     }
