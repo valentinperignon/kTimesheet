@@ -44,7 +44,7 @@ struct FormView: View {
 
     var body: some View {
         Form {
-            Picker("Epic", selection: $epicID) {
+            Picker(.fieldEpic, selection: $epicID) {
                 Text(Epic.unknown.summary)
                     .tag(Epic.unknown.id)
 
@@ -63,7 +63,7 @@ struct FormView: View {
                 subjectID = Subject.unknown.id
             }
 
-            Picker("Sujet", selection: $subjectID) {
+            Picker(.fieldSubject, selection: $subjectID) {
                 Text(Subject.unknown.summary)
                     .tag(Subject.unknown.id)
 
@@ -74,24 +74,24 @@ struct FormView: View {
             }
             .disabled(selectedEpic.subjects.isEmpty)
 
-            DatePicker("Temps", selection: $duration, displayedComponents: .hourAndMinute)
+            DatePicker(.fieldTime, selection: $duration, displayedComponents: .hourAndMinute)
 
-            DatePicker("Date", selection: $date)
+            DatePicker(.fieldDate, selection: $date)
 
-            TextField("Commentaire", text: $comment, axis: .vertical)
+            TextField(.fieldComment, text: $comment, axis: .vertical)
                 .lineLimit(2...)
                 .padding(.bottom, 8)
 
             HStack {
                 LoadingButton(
-                    label: "Envoyer",
+                    label: LocalizedStringResource.buttonSend,
                     systemImage: "checkmark.circle",
                     isLoading: isSendingForm,
                     action: sendTimesheet
                 )
 
                 Button(action: saveDraft) {
-                    Label("Enregistrer", systemImage: "plus.circle")
+                    Label(.buttonSave, systemImage: "plus.circle")
                 }
             }
             .buttonStyle(.bordered)
@@ -101,9 +101,9 @@ struct FormView: View {
         .onAppear {
             setStateWithLastSelection()
         }
-        .toast(isPresented: $isShowingError, title: "Error", icon: Image(systemName: "xmark.circle"))
-        .toast(isPresented: $isShowingSendSuccess, title: "Envoyé", icon: Image(systemName: "checkmark.circle"))
-        .toast(isPresented: $isShowingSaveSuccess, title: "Enregistré", icon: Image(systemName: "checkmark.circle"))
+        .toast(isPresented: $isShowingError, title: String(localized: .toastError), icon: Image(systemName: "xmark.circle"))
+        .toast(isPresented: $isShowingSendSuccess, title: String(localized: .toastSent), icon: Image(systemName: "checkmark.circle"))
+        .toast(isPresented: $isShowingSaveSuccess, title: String(localized: .toastSaved), icon: Image(systemName: "checkmark.circle"))
     }
 
     private func setStateWithLastSelection() {

@@ -14,21 +14,21 @@ struct SettingsView: View {
         VStack {
             HStack {
                 Button(action: back) {
-                    Label("Retour", systemImage: "chevron.left")
+                    Label(.buttonBack, systemImage: "chevron.left")
                         .labelStyle(.iconOnly)
                 }
 
-                Text("Paramètres")
+                Text(.settingsTitle)
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Button(action: logout) {
-                    Label("Se déconnecter", systemImage: "person.slash")
+                    Label(.buttonLogout, systemImage: "person.slash")
                         .labelStyle(.iconOnly)
                 }
 
                 Button(action: quit) {
-                    Text("Quitter")
+                    Text(.buttonQuit)
                 }
             }
             .padding(.bottom, 8)

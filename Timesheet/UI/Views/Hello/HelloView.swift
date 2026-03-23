@@ -16,9 +16,9 @@ struct HelloView: View {
                 .font(.title)
                 .padding(.bottom, 4)
 
-            Text("Bienvenue")
+            Text(.helloTitle)
                 .font(.headline)
-            Text("Chargement en cours…")
+            Text(.helloLoading)
                 .font(.callout)
                 .padding(.bottom, 4)
 

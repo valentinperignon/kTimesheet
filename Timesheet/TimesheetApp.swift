@@ -20,7 +20,7 @@ struct TimesheetApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("Timesheet", systemImage: "calendar.badge.clock") {
+        MenuBarExtra(.kTimesheet, systemImage: "calendar.badge.clock") {
             RootView()
         }
         .menuBarExtraStyle(.window)
