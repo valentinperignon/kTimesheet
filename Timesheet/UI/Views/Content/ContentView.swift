@@ -15,7 +15,7 @@ enum ContentType: String, Identifiable, CaseIterable {
 
     var id: String { rawValue }
 
-    var label: String {
+    var label: LocalizedStringKey {
         switch self {
         case .form:
             return "Formulaire"

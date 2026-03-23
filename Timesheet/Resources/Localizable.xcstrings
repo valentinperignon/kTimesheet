@@ -1,0 +1,91 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@"
+          }
+        }
+      }
+    },
+    "Affiché" : {
+
+    },
+    "Bienvenue" : {
+
+    },
+    "Brouillon" : {
+
+    },
+    "Chargement en cours…" : {
+
+    },
+    "Commentaire" : {
+
+    },
+    "Date" : {
+
+    },
+    "Date à afficher" : {
+
+    },
+    "Email" : {
+
+    },
+    "Enregistrer" : {
+
+    },
+    "Epic" : {
+
+    },
+    "Formulaire" : {
+
+    },
+    "Mon Activité" : {
+
+    },
+    "Nom" : {
+
+    },
+    "Paramètres" : {
+
+    },
+    "Pas de token Atlassian ?" : {
+
+    },
+    "Quitter" : {
+
+    },
+    "Retour" : {
+
+    },
+    "Se connecter" : {
+
+    },
+    "Se déconnecter" : {
+
+    },
+    "Sujet" : {
+
+    },
+    "Temps" : {
+
+    },
+    "Timesheet" : {
+
+    },
+    "Token" : {
+
+    },
+    "Type de contenu" : {
+
+    }
+  },
+  "version" : "1.1"
+}
