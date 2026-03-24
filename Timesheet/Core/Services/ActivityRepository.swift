@@ -9,10 +9,8 @@ import Foundation
 import Observation
 import RealmSwift
 
-final class ActivityRepository: Sendable {
-    static let shared = ActivityRepository()
-    
-    func addActivity(subject: Subject, duration: TimeInterval, comment: String, date: Date, draft: Bool) {
+enum ActivityRepository: Sendable {
+    static func addActivity(subject: Subject, duration: TimeInterval, comment: String, date: Date, draft: Bool) {
         let realm = try! Realm()
         try? realm.write {
             guard let liveSubject = realm.object(ofType: Subject.self, forPrimaryKey: subject.id) else { return }
@@ -22,7 +20,7 @@ final class ActivityRepository: Sendable {
         }
     }
 
-    func markAsSent(activity: Activity) {
+    static func markAsSent(activity: Activity) {
         let realm = try! Realm()
         try? realm.write {
             guard let liveActivity = realm.object(ofType: Activity.self, forPrimaryKey: activity.id) else { return }
@@ -30,7 +28,7 @@ final class ActivityRepository: Sendable {
         }
     }
 
-    func deleteActivity(activity: Activity) {
+    static func deleteActivity(activity: Activity) {
         let realm = try! Realm()
         try? realm.write {
             guard let liveActivity = realm.object(ofType: Activity.self, forPrimaryKey: activity.id) else { return }
@@ -38,7 +36,7 @@ final class ActivityRepository: Sendable {
         }
     }
 
-    private func fetchActivity(subject: Subject, comment: String, date: Date, draft: Bool) -> Activity? {
+    private static func fetchActivity(subject: Subject, comment: String, date: Date, draft: Bool) -> Activity? {
         let realm = try! Realm()
         let foundActivities = realm.objects(Activity.self).filter { activity in
             activity.draft == draft

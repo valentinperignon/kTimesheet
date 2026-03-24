@@ -71,7 +71,7 @@ struct ActivityView: View {
     }
 
     private func deleteActivity() {
-        ActivityRepository.shared.deleteActivity(activity: activity)
+        ActivityRepository.deleteActivity(activity: activity)
     }
 }
 
