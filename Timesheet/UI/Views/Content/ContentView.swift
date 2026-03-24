@@ -65,7 +65,9 @@ struct ContentView: View {
             .frame(minWidth: 325)
             .padding()
             .task {
-                try? await jiraManager.fetchEpics()
+                async let _ = try? jiraManager.fetchEpics()
+                
+                async let _ = NotificationsManager.shared.requestAuthorization()
             }
         }
         .scrollBounceBehavior(.basedOnSize)
