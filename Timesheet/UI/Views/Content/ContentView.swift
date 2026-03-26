@@ -64,7 +64,11 @@ struct ContentView: View {
         .padding()
         .task {
             async let _ = try? jiraManager.fetchEpics()
+
             async let _ = NotificationsManager.shared.requestAuthorization()
+            if await NotificationsManager.shared.shouldRescheduleReminders() {
+                await NotificationsManager.shared.scheduleReminders()
+            }
         }
     }
 
