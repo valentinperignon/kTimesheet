@@ -51,19 +51,44 @@ final class NotificationsManager: Sendable {
         cancelAllReminders()
         
         for week in 0..<Constants.weeksToSchedule {
-            
+            for day in scheduledDays {
+                scheduleReminder(week: week, day: day, hour: scheduledHour, minutes: scheduledMinutes)
+            }
         }
+    }
+    
+    private func scheduleReminder(week: Int, day: Int, hour: Int, minutes: Int) {
+        var dateComponents = DateComponents()
+        dateComponents.weekday = day
+        dateComponents.hour = hour
+        dateComponents.minute = minutes
+        dateComponents.weekOfYear = Calendar.current.component(.weekOfYear, from: .now) + week
+        
+        guard let date = Calendar.current.date(from: dateComponents), date > Date.now else { return }
+        
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: .notificationReminderTitle)
+        content.body = String(localized: .notificationReminderBody)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        let identifier = identifier(for: date)
+        
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
     }
     
     func cancelAllReminders() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
     
-    func cancelReminderIfNecessary(for date: Date) {
-        
+    func cancelReminderIfNecessary(at date: Date) {
+        let identifier = identifier(for: date)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }
     
     private func identifier(for date: Date) -> String {
-        return "\(Constants.notificationIdentifier)_\(date.formatted(.iso8601)))"
+        let formattedDate = date.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
+        return "\(Constants.notificationIdentifier)_\(formattedDate))"
     }
 }

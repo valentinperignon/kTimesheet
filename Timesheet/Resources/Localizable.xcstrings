@@ -393,6 +393,40 @@
         }
       }
     },
+    "notification.reminder.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick! Before you forget what you actually did today 😄"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vite ! Avant d'oublier ce que tu as fait aujourd'hui 😄"
+          }
+        }
+      }
+    },
+    "notification.reminder.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't forget to Timesheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "N'oublie pas de Timesheet"
+          }
+        }
+      }
+    },
     "picker.content_type" : {
       "extractionState" : "manual",
       "localizations" : {
