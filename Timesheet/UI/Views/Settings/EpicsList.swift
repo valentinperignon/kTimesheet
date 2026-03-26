@@ -15,6 +15,7 @@ struct EpicsList: View {
         Table(epics) {
             TableColumn(.tableName, value: \.summary)
             TableColumn(.tableShowing) { EpicToggle(epic: $0) }
+                .width(50)
         }
     }
 }
@@ -32,6 +33,7 @@ struct EpicToggle: View {
     var body: some View {
         Toggle(.settingsEpicShowing, isOn: $isShowing)
             .toggleStyle(.checkbox)
+            .labelsHidden()
             .onChange(of: isShowing) { _, newValue in
                 let realm = try! Realm()
                 try? realm.write {

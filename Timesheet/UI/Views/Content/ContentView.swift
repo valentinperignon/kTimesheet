@@ -32,45 +32,40 @@ struct ContentView: View {
     @State private var contentType = ContentType.form
 
     var body: some View {
-        ScrollView {
-            VStack {
-                HStack {
-                    Text(verbatim: "kTimesheet")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+        VStack {
+            HStack {
+                Text(verbatim: "kTimesheet")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Button(action: openSettings) {
-                        Label(.settingsTitle, systemImage: "gear")
-                            .labelStyle(.iconOnly)
-                    }
-                }
-
-                Picker(.pickerContentType, selection: $contentType) {
-                    ForEach(ContentType.allCases) { contentType in
-                        Text(contentType.label)
-                            .tag(contentType)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .padding(.bottom, 8)
-
-                switch contentType {
-                case .form:
-                    FormView()
-                case .activity:
-                    ActivitiesView()
+                Button(action: openSettings) {
+                    Label(.settingsTitle, systemImage: "gear")
+                        .labelStyle(.iconOnly)
                 }
             }
-            .frame(minWidth: 325)
-            .padding()
-            .task {
-                async let _ = try? jiraManager.fetchEpics()
-                
-                async let _ = NotificationsManager.shared.requestAuthorization()
+
+            Picker(.pickerContentType, selection: $contentType) {
+                ForEach(ContentType.allCases) { contentType in
+                    Text(contentType.label)
+                        .tag(contentType)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding(.bottom, 8)
+
+            switch contentType {
+            case .form:
+                FormView()
+            case .activity:
+                ActivitiesView()
             }
         }
-        .scrollBounceBehavior(.basedOnSize)
+        .padding()
+        .task {
+            async let _ = try? jiraManager.fetchEpics()
+            async let _ = NotificationsManager.shared.requestAuthorization()
+        }
     }
 
     private func openSettings() {
