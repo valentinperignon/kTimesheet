@@ -47,17 +47,26 @@ final class NotificationsManager: Sendable {
         }
     }
     
-    func scheduleReminders() {
+    func shouldRescheduleReminders() async -> Bool {
+        guard shouldSendNotifications else {
+            return false
+        }
+        
+        let scheduledReminders = await UNUserNotificationCenter.current().pendingNotificationRequests()
+        return scheduledReminders.count <= 2
+    }
+    
+    func scheduleReminders() async {
         cancelAllReminders()
         
         for week in 0..<Constants.weeksToSchedule {
             for day in scheduledDays {
-                scheduleReminder(week: week, day: day, hour: scheduledHour, minutes: scheduledMinutes)
+                async let _ = scheduleReminder(week: week, day: day, hour: scheduledHour, minutes: scheduledMinutes)
             }
         }
     }
     
-    private func scheduleReminder(week: Int, day: Int, hour: Int, minutes: Int) {
+    private func scheduleReminder(week: Int, day: Int, hour: Int, minutes: Int) async {
         var dateComponents = DateComponents()
         dateComponents.weekday = day
         dateComponents.hour = hour
@@ -71,11 +80,15 @@ final class NotificationsManager: Sendable {
         content.body = String(localized: .notificationReminderBody)
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        
         let identifier = identifier(for: date)
         
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request)
+        
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+        } catch {
+            SentrySDK.capture(error: error)
+        }
     }
     
     func cancelAllReminders() {
