@@ -1,68 +1,108 @@
-### Claude
-.claude
+# ========================
+# Xcode
+# ========================
 
-### macOS
-# Finder metadata
-.DS_Store
-
-# Thumbnails
-._*
-
-# Custom folder icons
-Icon
-
-# Volume root files
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-### Xcode
-# Xcode user settings
-xcuserdata/
-
-# Xcode build artifacts
+# Build output
 build/
 DerivedData/
 
-# Obj-C/Swift specific
-*.hmap
-*.ipa
-*.dSYM.zip
-*.dSYM
-
-# Playgrounds
-timeline.xctimeline
-playground.xcworkspace
-
-# Xcode state files
-*.xccheckout
-*.moved-aside
+# Xcode user-specific settings
 *.xcuserstate
-*.xcscmblueprint
-
-
-### Swift
-# Xcode user settings
+*.xcuserdatad/
 xcuserdata/
 
-# Xcode build data
-DerivedData/
+# Xcode Schemes (keep shared schemes, ignore personal ones)
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
 
-# Swift/Obj-C specific
-*.hmap
+# Playground output
+timeline.xctimeline
+playground.xcworkspace
 
-# App packaging
+# ========================
+# Swift Package Manager
+# ========================
+
+.build/
+.swiftpm/
+*.resolved
+# Uncomment the next line if you want to ignore Package.resolved
+# Package.resolved
+
+# ========================
+# CocoaPods
+# ========================
+
+Pods/
+Podfile.lock
+*.xcworkspace
+# Uncomment if not committing the workspace:
+# *.xcworkspace
+
+# ========================
+# Carthage
+# ========================
+
+Carthage/Build/
+Carthage/Checkouts/
+
+# ========================
+# macOS system files
+# ========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+# ========================
+# Instruments & Profiling
+# ========================
+
+*.trace
+
+# ========================
+# Crashlytics / Firebase
+# ========================
+
+crashlytics-build.properties
+com_crashlytics_export_strings.plist
+
+# ========================
+# App Store / Distribution
+# ========================
+
 *.ipa
 *.dSYM.zip
 *.dSYM
 
-# Playgrounds
-timeline.xctimeline
-playground.xcworkspace
+# ========================
+# Fastlane
+# ========================
 
-# Swift Package Manager
-# Package.resolved
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# ========================
+# Environment & Secrets
+# ========================
+
+.env
+.env.*
+*.pem
+Secrets.swift
+Config.xcconfig
+GoogleService-Info.plist
+
+# ========================
+# Editor & IDE
+# ========================
+
+.idea/
+*.swp
+*~
