@@ -33,7 +33,7 @@ struct LoginView: View {
             Text(verbatim: Constants.appName)
                 .font(.title)
 
-            TextField("field.email", text: $username)
+            TextField(String(localized: .fieldEmail), text: $username)
                 .textFieldStyle(.roundedBorder)
                 .textContentType(.emailAddress)
                 .onSubmit(login)
