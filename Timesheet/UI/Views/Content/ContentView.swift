@@ -34,7 +34,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HStack {
-                Text(verbatim: "kTimesheet")
+                Text(verbatim: Constants.appName)
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
 

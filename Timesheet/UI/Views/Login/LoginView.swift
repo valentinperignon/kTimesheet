@@ -30,7 +30,7 @@ struct LoginView: View {
 
     var body: some View {
         Form {
-            Text(verbatim: "kTimeSheet")
+            Text(verbatim: Constants.appName)
                 .font(.title)
 
             TextField("field.email", text: $username)
