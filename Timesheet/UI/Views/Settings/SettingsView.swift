@@ -7,8 +7,26 @@
 
 import SwiftUI
 
+enum SettingsType: String, Identifiable, CaseIterable {
+    case epicsList
+    case reminders
+
+    var id: String { rawValue }
+
+    var label: LocalizedStringResource {
+        switch self {
+        case .epicsList:
+            return "Epics"
+        case .reminders:
+            return "Reminders"
+        }
+    }
+}
+
 struct SettingsView: View {
     @Environment(RootViewModel.self) private var rootViewModel
+    
+    @State private var settingsType = SettingsType.epicsList
 
     var body: some View {
         VStack {
@@ -32,8 +50,23 @@ struct SettingsView: View {
                 }
             }
             .padding(.bottom, 8)
+            
+            Picker("Setings type", selection: $settingsType) {
+                ForEach(SettingsType.allCases) { settingType in
+                    Text(settingType.label)
+                        .tag(settingType)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding(.bottom, 8)
 
-            EpicsList()
+            switch settingsType {
+            case .epicsList:
+                EpicsList()
+            case .reminders:
+                Text(verbatim: "Reminders")
+            }
         }
         .padding()
     }
