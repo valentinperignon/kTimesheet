@@ -65,7 +65,7 @@ struct SettingsView: View {
             case .epicsList:
                 EpicsList()
             case .reminders:
-                Text(verbatim: "Reminders")
+                RemindersView()
             }
         }
         .padding()
