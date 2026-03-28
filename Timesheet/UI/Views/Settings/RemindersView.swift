@@ -7,21 +7,35 @@
 
 import SwiftUI
 
+enum Days: String, Sendable, Identifiable, CaseIterable {
+    var id: String { rawValue }
+    
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+}
+
 struct RemindersView: View {
     @AppStorage("shouldSendNotifications") private var shouldSendNotifications: Bool = true
     
+    @State private var selectedDays = Set<Days>()
+    
     var body: some View {
-        VStack {
-            Toggle("Receive daily reminders", isOn: $shouldSendNotifications)
+        Form {
+            Toggle("!Receive daily reminders", isOn: $shouldSendNotifications)
                 .toggleStyle(.switch)
             
-            Button(action: <#T##() -> Void#>, label: <#T##() -> View#>)
-            
-            ScrollView {
-                
+            if shouldSendNotifications {
+                HStack {
+                    
+                }
             }
         }
     }
     
-    private func add
+    private func addReminder() {
+        
+    }
 }
