@@ -10,12 +10,6 @@ import RealmSwift
 import UserNotifications
 import Sentry
 
-final class NotificationsSchedule: Object {
-    @Persisted var days: List<Int>
-    @Persisted var scheduledHour: Int
-    @Persisted var scheduledMinutes: Int
-}
-
 final class NotificationsReminderManager: Sendable {
     var shouldSendNotifications: Bool {
         get { UserDefaults.standard.bool(forKey: "shouldSendNotifications") }
