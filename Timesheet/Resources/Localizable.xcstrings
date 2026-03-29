@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "!Receive daily reminders" : {
+
+    },
     "%lld %@" : {
       "extractionState" : "manual",
       "generatesSymbol" : false,
@@ -205,6 +208,9 @@
           }
         }
       }
+    },
+    "Days" : {
+
     },
     "Epics" : {
 
@@ -446,9 +452,6 @@
           }
         }
       }
-    },
-    "Receive daily reminders" : {
-
     },
     "Reminders" : {
 

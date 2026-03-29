@@ -67,7 +67,7 @@ struct ContentView: View {
 
             async let _ = NotificationsReminderManager.shared.requestAuthorization()
             if await NotificationsReminderManager.shared.shouldRescheduleReminders() {
-                await NotificationsReminderManager.shared.scheduleReminders()
+                await NotificationsReminderManager.shared.scheduleAllReminders()
             }
         }
     }

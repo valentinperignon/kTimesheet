@@ -49,6 +49,7 @@ struct SettingsView: View {
                     Text(.buttonQuit)
                 }
             }
+            .padding([.horizontal, .top])
             .padding(.bottom, 8)
             
             Picker("Setings type", selection: $settingsType) {
@@ -59,6 +60,7 @@ struct SettingsView: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
+            .padding(.horizontal)
             .padding(.bottom, 8)
 
             switch settingsType {
@@ -68,7 +70,6 @@ struct SettingsView: View {
                 RemindersView()
             }
         }
-        .padding()
     }
 
     private func back() {

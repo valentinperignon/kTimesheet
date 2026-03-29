@@ -16,6 +16,21 @@ final class NotificationsReminderManager: Sendable {
         set { UserDefaults.standard.set(newValue, forKey: "shouldSendNotifications") }
     }
     
+    var selectedDays: [Int] {
+        get { UserDefaults.standard.array(forKey: "notificationsReminderSelectedDays") as? [Int] ?? [] }
+        set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedDays") }
+    }
+    
+    var selecteHour: Int {
+        get { UserDefaults.standard.integer(forKey: "notificationsReminderSelectedHour") }
+        set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedHour") }
+    }
+    
+    var selecteMinutes: Int {
+        get { UserDefaults.standard.integer(forKey: "notificationsReminderSelectedMinutes") }
+        set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedMinutes") }
+    }
+    
     static let shared = NotificationsReminderManager()
     
     enum Constants: Sendable {
@@ -43,21 +58,16 @@ final class NotificationsReminderManager: Sendable {
     }
     
     func scheduleAllReminders() async {
-        let realm = try! await Realm()
-        let notificationsSchedules = realm.objects(NotificationsSchedule.self)
-        
         cancelAllReminders()
         
         for week in 0..<Constants.weeksToSchedule {
-            for schedule in notificationsSchedules {
-                for day in schedule.days {
-                    async let _ = scheduleReminder(
-                        week: week,
-                        day: day,
-                        hour: schedule.scheduledHour,
-                        minutes: schedule.scheduledMinutes
-                    )
-                }
+            for day in selectedDays {
+                async let _ = scheduleReminder(
+                    week: week,
+                    day: day,
+                    hour: selecteHour,
+                    minutes: selecteMinutes
+                )
             }
         }
     }
@@ -98,24 +108,11 @@ final class NotificationsReminderManager: Sendable {
     
     func cancelReminderIfNecessary(at date: Date) async {
         let identifier = getIdentifier(for: date)
-        
-        let reminders = await UNUserNotificationCenter.current().pendingNotificationRequests()
-        let remindersToCancel = reminders
-            .map(\.identifier)
-            .filter { $0.hasPrefix(getIdentifier(for: date, short: true)) }
-        
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: remindersToCancel)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }
     
-    private func getIdentifier(for date: Date, short: Bool = false) -> String {
+    private func getIdentifier(for date: Date) -> String {
         let formattedDate = date.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
-        let formattedTime = date.formatted(.dateTime.hour().minute())
-        
-        let base = "\(Constants.notificationIdentifier)_\(formattedDate)"
-        if short {
-            return base
-        } else {
-            return "\(base)_\(formattedTime)"
-        }
+        return "\(Constants.notificationIdentifier)_\(formattedDate)"
     }
 }
