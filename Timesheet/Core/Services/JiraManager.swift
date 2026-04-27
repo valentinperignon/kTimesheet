@@ -76,12 +76,12 @@ final class JiraManager: Sendable {
         guard let subject = activity.subject else { throw DomainError.subjectNotFound }
 
         let (hours, minutes) = DurationHelper(duration: activity.duration).transformToHoursAndMinutes()
-        try await sendTime(subject: subject, hours: hours, minutes: minutes, date: activity.date, comment: activity.comment)
+        try await sendTime(ofSubject: subject.id, hours: hours, minutes: minutes, date: activity.date, comment: activity.comment)
     }
 
-    func sendTime(subject: Subject, hours: Int, minutes: Int, date: Date, comment: String) async throws {
+    func sendTime(ofSubject subjectID: Subject.ID, hours: Int, minutes: Int, date: Date, comment: String) async throws {
         let request = try jiraFetcher.makeRequest(
-            path: "/rest/api/2/issue/\(subject.id)/worklog",
+            path: "/rest/api/2/issue/\(subjectID)/worklog",
             queryItems: [
                 URLQueryItem(name: "adjustEstimate", value: "new"),
                 URLQueryItem(name: "newEstimate", value: "0m")

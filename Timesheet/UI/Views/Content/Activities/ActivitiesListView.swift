@@ -5,7 +5,7 @@
 //  Created by Valentin on 10/02/2025.
 //
 
-import ToastView
+import AlertToast
 import RealmSwift
 import SwiftUI
 
@@ -60,8 +60,12 @@ struct ActivitiesListView: View {
                 }
             }
         }
-        .toast(isPresented: $isShowingError, title: String(localized: .toastError), icon: Image(systemName: "xmark.circle"))
-        .toast(isPresented: $isShowingSuccess, title: String(localized: .toastSent), icon: Image(systemName: "checkmark.circle"))
+        .toast(isPresenting: $isShowingError) {
+            AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
+        }
+        .toast(isPresenting: $isShowingSuccess) {
+            AlertToast(displayMode: .hud, type: .complete(.accentColor), title: String(localized: .toastSent))
+        }
     }
 
     private func sendDrafts() {

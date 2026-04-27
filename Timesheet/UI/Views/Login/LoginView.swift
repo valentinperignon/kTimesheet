@@ -5,7 +5,7 @@
 //  Created by Valentin Perignon on 05.02.2025.
 //
 
-import ToastView
+import AlertToast
 import SwiftUI
 
 struct LoginView: View {
@@ -58,7 +58,9 @@ struct LoginView: View {
             .disabled(!isFormValid)
         }
         .padding()
-        .toast(isPresented: $isShowingError, title: String(localized: .toastError), icon: Image(systemName: "xmark"))
+        .toast(isPresenting: $isShowingError) {
+            AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
+        }
     }
 
     private func didTapHelpButton() {

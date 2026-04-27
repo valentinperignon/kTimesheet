@@ -5,8 +5,8 @@
 //  Created by Valentin Perignon on 06.02.2025.
 //
 
+import AlertToast
 import RealmSwift
-import ToastView
 import SwiftUI
 
 struct FormView: View {
@@ -101,9 +101,15 @@ struct FormView: View {
         .onAppear {
             setStateWithLastSelection()
         }
-        .toast(isPresented: $isShowingError, title: String(localized: .toastError), icon: Image(systemName: "xmark.circle"))
-        .toast(isPresented: $isShowingSendSuccess, title: String(localized: .toastSent), icon: Image(systemName: "checkmark.circle"))
-        .toast(isPresented: $isShowingSaveSuccess, title: String(localized: .toastSaved), icon: Image(systemName: "checkmark.circle"))
+        .toast(isPresenting: $isShowingError) {
+            AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
+        }
+        .toast(isPresenting: $isShowingSendSuccess) {
+            AlertToast(displayMode: .hud, type: .complete(.accentColor), title: String(localized: .toastSent))
+        }
+        .toast(isPresenting: $isShowingSaveSuccess) {
+            AlertToast(displayMode: .hud, type: .complete(.accentColor), title: String(localized: .toastSaved))
+        }
     }
 
     private func setStateWithLastSelection() {
@@ -125,7 +131,7 @@ struct FormView: View {
 
                 isSendingForm = true
                 try await jiraManager.sendTime(
-                    subject: selectedSubject,
+                    ofSubject: selectedSubject.id,
                     hours: hours,
                     minutes: minutes,
                     date: date,

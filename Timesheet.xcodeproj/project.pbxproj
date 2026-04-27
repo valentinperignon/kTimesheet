@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A79963402D9C755D008263AE /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A799633F2D9C755D008263AE /* Sentry */; };
-		A7B7C6A82F9FC888000ECF42 /* ToastView in Frameworks */ = {isa = PBXBuildFile; productRef = A7B7C6A72F9FC888000ECF42 /* ToastView */; };
+		A7B7C6AB2F9FCBEC000ECF42 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = A7B7C6AA2F9FCBEC000ECF42 /* AlertToast */; };
 		F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = F943149A2D56AE0700382FB9 /* KeychainAccess */; };
 		F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; };
 		F9447ECB2D540BD100E0779D /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = F9447EC72D540A2800E0779D /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -46,9 +46,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9447EC82D540A2800E0779D /* RealmSwift in Frameworks */,
+				A7B7C6AB2F9FCBEC000ECF42 /* AlertToast in Frameworks */,
 				F943149B2D56AE0700382FB9 /* KeychainAccess in Frameworks */,
 				A79963402D9C755D008263AE /* Sentry in Frameworks */,
-				A7B7C6A82F9FC888000ECF42 /* ToastView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,7 +95,7 @@
 				F9447EC72D540A2800E0779D /* RealmSwift */,
 				F943149A2D56AE0700382FB9 /* KeychainAccess */,
 				A799633F2D9C755D008263AE /* Sentry */,
-				A7B7C6A72F9FC888000ECF42 /* ToastView */,
+				A7B7C6AA2F9FCBEC000ECF42 /* AlertToast */,
 			);
 			productName = Timesheet;
 			productReference = F92EAB042D52667600D8F7C2 /* kTimesheet.app */;
@@ -130,7 +130,7 @@
 				F9447EC42D540A2800E0779D /* XCRemoteSwiftPackageReference "realm-swift" */,
 				F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				A799633E2D9C755D008263AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
-				A7B7C6A62F9FC888000ECF42 /* XCRemoteSwiftPackageReference "ToastView" */,
+				A7B7C6A92F9FCBEC000ECF42 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F92EAB052D52667600D8F7C2 /* Products */;
@@ -383,12 +383,12 @@
 			traits = (
 			);
 		};
-		A7B7C6A62F9FC888000ECF42 /* XCRemoteSwiftPackageReference "ToastView" */ = {
+		A7B7C6A92F9FCBEC000ECF42 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/PhilippeWeidmann/ToastView";
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 1.3.9;
 			};
 		};
 		F94314992D56AE0700382FB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
@@ -415,10 +415,10 @@
 			package = A799633E2D9C755D008263AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
-		A7B7C6A72F9FC888000ECF42 /* ToastView */ = {
+		A7B7C6AA2F9FCBEC000ECF42 /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A7B7C6A62F9FC888000ECF42 /* XCRemoteSwiftPackageReference "ToastView" */;
-			productName = ToastView;
+			package = A7B7C6A92F9FCBEC000ECF42 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
 		};
 		F943149A2D56AE0700382FB9 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
