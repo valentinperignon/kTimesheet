@@ -16,9 +16,9 @@ enum SettingsType: String, Identifiable, CaseIterable {
     var label: LocalizedStringResource {
         switch self {
         case .epicsList:
-            return "Epics"
+            return LocalizedStringResource.titleEpics
         case .reminders:
-            return "Reminders"
+            return LocalizedStringResource.titleReminders
         }
     }
 }
@@ -52,7 +52,7 @@ struct SettingsView: View {
             .padding([.horizontal, .top])
             .padding(.bottom, 8)
             
-            Picker("Setings type", selection: $settingsType) {
+            Picker(.accessibilitySettingsType, selection: $settingsType) {
                 ForEach(SettingsType.allCases) { settingType in
                     Text(settingType.label)
                         .tag(settingType)

@@ -17,7 +17,7 @@ struct ActivitiesHeader: View {
 
     var body: some View {
         HStack {
-            Text("\(activities.count) \(String(localized: activities.count > 1 ? "activity.plural" : "activity.singular"))")
+            Text(verbatim: "\(activities.count) \(String(localized: activities.count > 1 ? "activity.plural" : "activity.singular"))")
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             DurationView(duration: totalTime)

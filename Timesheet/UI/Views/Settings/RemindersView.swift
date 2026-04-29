@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-enum Days: String, Sendable, Identifiable, CaseIterable {
-    var id: String { rawValue }
+enum SchedulableDay: String, Sendable, Identifiable, CaseIterable {
+    var id: String {
+        rawValue
+    }
     
     case monday
     case tuesday
@@ -16,18 +18,18 @@ enum Days: String, Sendable, Identifiable, CaseIterable {
     case thursday
     case friday
     
-    var localized: String {
+    var localized: LocalizedStringKey {
         switch self {
         case .monday:
-            return "Monday"
+            return LocalizedStringResource.dayMonday
         case .tuesday:
-            return "Tuesday"
+            return LocalizedStringResource.dayTuesday
         case .wednesday:
-            return "Wednesday"
+            return LocalizedStringResource.dayWednesday
         case .thursday:
-            return "Thursday"
+            return "dayThursday"
         case .friday:
-            return "Friday"
+            return LocalizedStringResource.dayFriday
         }
     }
 }
@@ -35,18 +37,18 @@ enum Days: String, Sendable, Identifiable, CaseIterable {
 struct RemindersView: View {
     @AppStorage("shouldSendNotifications") private var shouldSendNotifications: Bool = true
     
-    @State private var selectedDays = Set<Days>()
+    @State private var selectedDays = Set<SchedulableDay>()
     
     var body: some View {
         Form {
             Section {
-                Toggle("!Receive daily reminders", isOn: $shouldSendNotifications)
+                Toggle(.receiveDailyReminders, isOn: $shouldSendNotifications)
                     .toggleStyle(.switch)
             }
             
             if shouldSendNotifications {
                 Section {
-                    ForEach(Days.allCases) { day in
+                    ForEach(SchedulableDay.allCases) { day in
                         Toggle(
                             day.localized,
                             isOn: Binding(get: { selectedDays.contains(day) }, set: {  _,_ in toggleDay(day) })
@@ -54,7 +56,7 @@ struct RemindersView: View {
                         .toggleStyle(.checkbox)
                     }
                 } header: {
-                    Text("Days")
+                    Text(.days)
                 }
                 
                 Section {
@@ -65,7 +67,7 @@ struct RemindersView: View {
         .formStyle(.grouped)
     }
     
-    private func toggleDay(_ day: Days) {
+    private func toggleDay(_ day: SchedulableDay) {
         if selectedDays.contains(day) {
             selectedDays.remove(day)
         } else {

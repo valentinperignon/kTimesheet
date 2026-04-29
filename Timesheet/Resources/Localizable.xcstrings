@@ -1,23 +1,36 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "!Receive daily reminders" : {
-
-    },
-    "%lld %@" : {
+    ".receiveDailyReminders" : {
       "extractionState" : "manual",
-      "generatesSymbol" : false,
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld %2$@"
+            "state" : "translated",
+            "value" : "Receive daily reminders"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld %2$@"
+            "value" : "Recevoir des rappels quotidiens"
+          }
+        }
+      }
+    },
+    "accessibilitySettingsType" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a type of setting"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir un type de paramètre"
           }
         }
       }
@@ -209,11 +222,100 @@
         }
       }
     },
-    "Days" : {
-
+    "dayFriday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Friday"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vendredi"
+          }
+        }
+      }
     },
-    "Epics" : {
-
+    "dayMonday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monday"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lundi"
+          }
+        }
+      }
+    },
+    "days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Days"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours"
+          }
+        }
+      }
+    },
+    "dayThursday" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeudi"
+          }
+        }
+      }
+    },
+    "dayTuesday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuesday"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mardi"
+          }
+        }
+      }
+    },
+    "dayWednesday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wednesday"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mercredi"
+          }
+        }
+      }
     },
     "field.comment" : {
       "extractionState" : "manual",
@@ -430,7 +532,7 @@
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "N'oublie pas de Timesheet"
           }
         }
@@ -452,12 +554,6 @@
           }
         }
       }
-    },
-    "Reminders" : {
-
-    },
-    "Setings type" : {
-
     },
     "settings.epic.showing" : {
       "extractionState" : "manual",
@@ -557,6 +653,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Affiché"
+          }
+        }
+      }
+    },
+    "titleEpics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Epics"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Epics"
+          }
+        }
+      }
+    },
+    "titleReminders" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rappels"
           }
         }
       }

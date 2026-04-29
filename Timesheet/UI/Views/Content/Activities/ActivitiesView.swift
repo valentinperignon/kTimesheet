@@ -6,7 +6,6 @@
 //
 
 import RealmSwift
-import ToastView
 import SwiftUI
 
 struct ActivitiesView: View {
