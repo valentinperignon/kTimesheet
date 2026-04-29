@@ -58,7 +58,8 @@ enum SchedulableDay: Int, Sendable, Identifiable, Equatable, CaseIterable {
 }
 
 struct RemindersView: View {
-    @State private var shouldSendNotifications = false
+    @State private var shouldSendNotifications = NotificationsReminderManager.shared.shouldSendNotifications
+    
     @State private var selectedDays = Set<SchedulableDay>()
     @State private var selectedTime = Date()
     
@@ -72,9 +73,6 @@ struct RemindersView: View {
                     .toggleStyle(.switch)
                     .onChange(of: shouldSendNotifications) { _, newValue in
                         Task {
-                            guard newValue != NotificationsReminderManager.shared.shouldSendNotifications else {
-                                return
-                            }
                             await NotificationsReminderManager.shared.enableReminders(newValue)
                         }
                     }
@@ -114,8 +112,6 @@ struct RemindersView: View {
     }
     
     private func setupValues() {
-        shouldSendNotifications = NotificationsReminderManager.shared.shouldSendNotifications
-        
         selectedDays = Set(NotificationsReminderManager.shared.selectedDays.compactMap { SchedulableDay(rawValue: $0) })
         
         var dateComponents = DateComponents()
