@@ -36,15 +36,12 @@ enum ActivityRepository: Sendable {
         }
     }
 
-    private static func fetchActivity(subject: Subject, comment: String, date: Date, draft: Bool) -> Activity? {
+    static func hasActivities(forDate date: Date) -> Bool {
         let realm = try! Realm()
         let foundActivities = realm.objects(Activity.self).filter { activity in
-            activity.draft == draft
-            && activity.subject?.id == subject.id
-            && activity.comment == comment
-            && Calendar.current.isDate(activity.date, inSameDayAs: date)
+            return Calendar.current.isDate(activity.date, inSameDayAs: date)
         }
 
-        return foundActivities.first
+        return foundActivities.count > 0
     }
 }

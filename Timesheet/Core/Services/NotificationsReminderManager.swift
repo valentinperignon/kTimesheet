@@ -11,22 +11,22 @@ import UserNotifications
 import Sentry
 
 final class NotificationsReminderManager: Sendable {
-    var shouldSendNotifications: Bool {
+    private(set) var shouldSendNotifications: Bool {
         get { UserDefaults.standard.bool(forKey: "shouldSendNotifications") }
         set { UserDefaults.standard.set(newValue, forKey: "shouldSendNotifications") }
     }
     
-    var selectedDays: [Int] {
+    private(set) var selectedDays: [Int] {
         get { UserDefaults.standard.array(forKey: "notificationsReminderSelectedDays") as? [Int] ?? [] }
         set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedDays") }
     }
     
-    var selecteHour: Int {
+    private(set) var selecteHour: Int {
         get { UserDefaults.standard.integer(forKey: "notificationsReminderSelectedHour") }
         set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedHour") }
     }
     
-    var selecteMinutes: Int {
+    private(set) var selecteMinutes: Int {
         get { UserDefaults.standard.integer(forKey: "notificationsReminderSelectedMinutes") }
         set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedMinutes") }
     }
@@ -39,6 +39,24 @@ final class NotificationsReminderManager: Sendable {
     }
     
     init() {}
+    
+    func enableReminders(_ value: Bool) async {
+        shouldSendNotifications = value
+        
+        if shouldSendNotifications {
+            await scheduleAllReminders()
+        } else {
+            cancelAllReminders()
+        }
+    }
+    
+    func updateSchedule(days: [Int], hour: Int, minutes: Int) async {
+        selectedDays = days
+        selecteHour = hour
+        selecteMinutes = minutes
+        
+        await scheduleAllReminders()
+    }
     
     func requestAuthorization() async {
         do {
@@ -61,8 +79,12 @@ final class NotificationsReminderManager: Sendable {
         cancelAllReminders()
         
         for week in 0..<Constants.weeksToSchedule {
+            guard !Task.isCancelled else { return }
+            
             for day in selectedDays {
-                async let _ = scheduleReminder(
+                guard !Task.isCancelled else { return }
+                
+                async let _ = scheduleReminderIfNecessary(
                     week: week,
                     day: day,
                     hour: selecteHour,
@@ -72,9 +94,15 @@ final class NotificationsReminderManager: Sendable {
         }
     }
     
-    private func scheduleReminder(week: Int, day: Int, hour: Int, minutes: Int) async {
+    private func scheduleReminderIfNecessary(week: Int, day: Int, hour: Int, minutes: Int) async {
         let dateComponents = generateDateComponents(week: week, day: day, hour: hour, minutes: minutes)
-        guard let date = Calendar.current.date(from: dateComponents), date > Date.now else { return }
+        guard let date = Calendar.current.date(from: dateComponents), date > Date.now else {
+            return
+        }
+        
+        guard !ActivityRepository.hasActivities(forDate: date) else {
+            return
+        }
         
         let content = UNMutableNotificationContent()
         content.title = String(localized: .notificationReminderTitle)

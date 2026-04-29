@@ -13,6 +13,8 @@ struct DayPickerToggleStyle: ToggleStyle {
             configuration.$isOn.wrappedValue.toggle()
         } label: {
             configuration.label
+                .font(.system(.body, design: .monospaced))
+                .fixedSize(horizontal: true, vertical: false)
                 .foregroundStyle(configuration.isOn ? Color.white : Color.primary)
                 .padding()
                 .background {
@@ -56,8 +58,7 @@ enum SchedulableDay: Int, Sendable, Identifiable, Equatable, CaseIterable {
 }
 
 struct RemindersView: View {
-    @AppStorage("shouldSendNotifications") private var shouldSendNotifications: Bool = false
-    
+    @State private var shouldSendNotifications = false
     @State private var selectedDays = Set<SchedulableDay>()
     @State private var selectedTime = Date()
     
@@ -69,8 +70,13 @@ struct RemindersView: View {
             Section {
                 Toggle(.receiveDailyReminders, isOn: $shouldSendNotifications)
                     .toggleStyle(.switch)
-                    .onChange(of: shouldSendNotifications) { _, _ in
-                        saveReminders()
+                    .onChange(of: shouldSendNotifications) { _, newValue in
+                        Task {
+                            guard newValue != NotificationsReminderManager.shared.shouldSendNotifications else {
+                                return
+                            }
+                            await NotificationsReminderManager.shared.enableReminders(newValue)
+                        }
                     }
             }
             
@@ -85,8 +91,14 @@ struct RemindersView: View {
                             .toggleStyle(DayPickerToggleStyle())
                         }
                     }
+                    .onChange(of: selectedDays) { _, _ in
+                        saveChanges = needsToSaveChanges(days: true)
+                    }
                     
                     DatePicker(.fieldTime, selection: $selectedTime, displayedComponents: .hourAndMinute)
+                        .onChange(of: selectedTime) { _, _ in
+                            saveChanges = needsToSaveChanges(time: true)
+                        }
                 } footer: {
                     LoadingButton(label: .save, systemImage: "checkmark.circle", isLoading: isLoading) {
                         saveReminders()
@@ -99,15 +111,11 @@ struct RemindersView: View {
         .onAppear {
             setupValues()
         }
-        .onChange(of: selectedDays) { _, _ in
-            saveChanges = needsToSaveChanges(days: true)
-        }
-        .onChange(of: selectedTime) { _, _ in
-            saveChanges = needsToSaveChanges(time: true)
-        }
     }
     
     private func setupValues() {
+        shouldSendNotifications = NotificationsReminderManager.shared.shouldSendNotifications
+        
         selectedDays = Set(NotificationsReminderManager.shared.selectedDays.compactMap { SchedulableDay(rawValue: $0) })
         
         var dateComponents = DateComponents()
@@ -146,20 +154,18 @@ struct RemindersView: View {
         }
     }
     
+    private func toggleReminders() {
+        
+    }
+    
     private func saveReminders() {
-        guard shouldSendNotifications else {
-            NotificationsReminderManager.shared.cancelAllReminders()
-            return
-        }
-        
-        NotificationsReminderManager.shared.selecteHour = Calendar.current.component(.hour, from: selectedTime)
-        NotificationsReminderManager.shared.selecteMinutes = Calendar.current.component(.minute, from: selectedTime)
-        NotificationsReminderManager.shared.selectedDays = selectedDays.map { $0.rawValue }
-        
         Task {
             isLoading = true
             
-            await NotificationsReminderManager.shared.scheduleAllReminders()
+            let days = selectedDays.map { $0.rawValue }
+            let hour = Calendar.current.component(.hour, from: selectedTime)
+            let minutes = Calendar.current.component(.minute, from: selectedTime)
+            await NotificationsReminderManager.shared.updateSchedule(days: days, hour: hour, minutes: minutes)
             
             isLoading = false
             saveChanges = false
