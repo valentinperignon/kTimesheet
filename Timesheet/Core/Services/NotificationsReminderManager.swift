@@ -98,6 +98,8 @@ final class NotificationsReminderManager: Sendable {
         dateComponents.hour = hour
         dateComponents.minute = minutes
         dateComponents.weekOfYear = Calendar.current.component(.weekOfYear, from: .now) + week
+        dateComponents.year = Calendar.current.component(.year, from: .now)
+        dateComponents.timeZone = Calendar.current.timeZone
         
         return dateComponents
     }
