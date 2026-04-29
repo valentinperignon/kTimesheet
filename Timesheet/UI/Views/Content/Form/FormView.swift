@@ -84,7 +84,7 @@ struct FormView: View {
 
             HStack {
                 LoadingButton(
-                    label: LocalizedStringResource.buttonSend,
+                    label: .buttonSend,
                     systemImage: "checkmark.circle",
                     isLoading: isSendingForm,
                     action: sendTimesheet

@@ -274,7 +274,14 @@
       }
     },
     "dayThursday" : {
+      "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thursday"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -551,6 +558,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Type de contenu"
+          }
+        }
+      }
+    },
+    "save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Enregistrer"
           }
         }
       }
