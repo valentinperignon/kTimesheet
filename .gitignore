@@ -22,22 +22,16 @@ playground.xcworkspace
 # ========================
 # Swift Package Manager
 # ========================
-
 .build/
 .swiftpm/
-*.resolved
-# Uncomment the next line if you want to ignore Package.resolved
-# Package.resolved
 
 # ========================
 # CocoaPods
 # ========================
-
 Pods/
-Podfile.lock
+# Podfile.lock should generally be committed
 *.xcworkspace
-# Uncomment if not committing the workspace:
-# *.xcworkspace
+!*.xcodeproj/project.xcworkspace
 
 # ========================
 # Carthage
