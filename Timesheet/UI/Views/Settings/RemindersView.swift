@@ -19,7 +19,7 @@ struct DayPickerToggleStyle: ToggleStyle {
                 .padding()
                 .background {
                     Circle()
-                        .fill(configuration.isOn ? Color.accentColor : Color.gray.opacity(0.25))
+                        .fill(configuration.isOn ? Color.accentColor : Color.gray.opacity(0.15))
                 }
         }
         .buttonStyle(.plain)
