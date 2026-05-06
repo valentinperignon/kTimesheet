@@ -392,6 +392,23 @@
         }
       }
     },
+    "field.hour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heure"
+          }
+        }
+      }
+    },
     "field.subject" : {
       "extractionState" : "manual",
       "localizations" : {

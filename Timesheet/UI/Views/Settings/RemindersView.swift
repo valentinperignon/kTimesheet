@@ -64,7 +64,7 @@ struct RemindersView: View {
     @State private var selectedTime = Date()
     
     @State private var isLoading = false
-    @State private var saveChanges = false
+    @State private var shouldSaveChanges = false
     
     var body: some View {
         Form {
@@ -90,18 +90,18 @@ struct RemindersView: View {
                         }
                     }
                     .onChange(of: selectedDays) { _, _ in
-                        saveChanges = needsToSaveChanges(days: true)
+                        shouldSaveChanges = needsToSaveChanges(days: true)
                     }
                     
-                    DatePicker(.fieldTime, selection: $selectedTime, displayedComponents: .hourAndMinute)
+                    DatePicker(.fieldHour, selection: $selectedTime, displayedComponents: .hourAndMinute)
                         .onChange(of: selectedTime) { _, _ in
-                            saveChanges = needsToSaveChanges(time: true)
+                            shouldSaveChanges = needsToSaveChanges(time: true)
                         }
                 } footer: {
                     LoadingButton(label: .save, systemImage: "checkmark.circle", isLoading: isLoading) {
                         saveReminders()
                     }
-                    .disabled(!saveChanges)
+                    .disabled(!shouldSaveChanges)
                 }
             }
         }
@@ -164,7 +164,7 @@ struct RemindersView: View {
             await NotificationsReminderManager.shared.updateSchedule(days: days, hour: hour, minutes: minutes)
             
             isLoading = false
-            saveChanges = false
+            shouldSaveChanges = false
         }
     }
 }
