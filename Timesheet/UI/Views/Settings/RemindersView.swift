@@ -7,25 +7,6 @@
 
 import SwiftUI
 
-struct DayPickerToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        Button {
-            configuration.$isOn.wrappedValue.toggle()
-        } label: {
-            configuration.label
-                .font(.system(.body, design: .monospaced))
-                .fixedSize(horizontal: true, vertical: false)
-                .foregroundStyle(configuration.isOn ? Color.white : Color.primary)
-                .padding()
-                .background {
-                    Circle()
-                        .fill(configuration.isOn ? Color.accentColor : Color.gray.opacity(0.15))
-                }
-        }
-        .buttonStyle(.plain)
-    }
-}
-
 enum SchedulableDay: Int, Sendable, Identifiable, Equatable, CaseIterable {
     var id: Int {
         rawValue
@@ -86,7 +67,7 @@ struct RemindersView: View {
                                 day.shortLocalized,
                                 isOn: Binding(get: { selectedDays.contains(day) }, set: {  _,_ in toggleDay(day) })
                             )
-                            .toggleStyle(DayPickerToggleStyle())
+                            .toggleStyle(.dayPicker)
                         }
                     }
                     .onChange(of: selectedDays) { _, _ in
