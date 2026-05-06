@@ -17,18 +17,39 @@ final class NotificationsReminderManager: Sendable {
     }
     
     private(set) var selectedDays: [Int] {
-        get { UserDefaults.standard.array(forKey: "notificationsReminderSelectedDays") as? [Int] ?? [] }
-        set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedDays") }
+        get {
+            if UserDefaults.standard.object(forKey: "notificationsReminderSelectedDays") == nil {
+                UserDefaults.standard.set(Constants.defaultDays, forKey: "notificationsReminderSelectedDays")
+            }
+            return UserDefaults.standard.array(forKey: "notificationsReminderSelectedDays") as? [Int] ?? Constants.defaultDays
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedDays")
+        }
     }
     
     private(set) var selecteHour: Int {
-        get { UserDefaults.standard.integer(forKey: "notificationsReminderSelectedHour") }
-        set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedHour") }
+        get {
+            if UserDefaults.standard.object(forKey: "notificationsReminderSelectedHour") == nil {
+                UserDefaults.standard.set(Constants.defaultHour, forKey: "notificationsReminderSelectedHour")
+            }
+            return UserDefaults.standard.integer(forKey: "notificationsReminderSelectedHour")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedHour")
+        }
     }
     
     private(set) var selecteMinutes: Int {
-        get { UserDefaults.standard.integer(forKey: "notificationsReminderSelectedMinutes") }
-        set { UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedMinutes") }
+        get {
+            if UserDefaults.standard.object(forKey: "notificationsReminderSelectedMinutes") == nil {
+                UserDefaults.standard.set(Constants.defaultMinutes, forKey: "notificationsReminderSelectedMinutes")
+            }
+            return UserDefaults.standard.integer(forKey: "notificationsReminderSelectedMinutes")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedMinutes")
+        }
     }
     
     static let shared = NotificationsReminderManager()
@@ -36,6 +57,10 @@ final class NotificationsReminderManager: Sendable {
     enum Constants: Sendable {
         static let weeksToSchedule = 3
         static let notificationIdentifier = "kTimesheet.reminder"
+        
+        static let defaultDays = [2, 3, 4, 5, 6]
+        static let defaultHour = 16
+        static let defaultMinutes = 30
     }
     
     init() {}
