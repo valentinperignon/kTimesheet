@@ -125,7 +125,7 @@ final class NotificationsReminderManager: Sendable {
             return
         }
         
-        guard !ActivityRepository.hasActivities(forDate: date) else {
+        guard !ActivityRepository.hasActivities(forDate: date, draft: false) else {
             return
         }
         
