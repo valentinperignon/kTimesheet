@@ -73,7 +73,9 @@ final class JiraManager: Sendable {
             throw DomainError.activityNotFound
         }
         
-        guard let subject = activity.subject else { throw DomainError.subjectNotFound }
+        guard let subject = activity.subject else {
+            throw DomainError.subjectNotFound
+        }
 
         let (hours, minutes) = DurationHelper(duration: activity.duration).transformToHoursAndMinutes()
         try await sendTime(ofSubject: subject.id, hours: hours, minutes: minutes, date: activity.date, comment: activity.comment)
