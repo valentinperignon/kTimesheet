@@ -89,6 +89,8 @@ final class JiraManager: Sendable {
             parameters: TimesheetData(hours: hours, minutes: minutes, date: date, comment: comment)
         )
         _ = try await jiraFetcher.performRequest(request)
+        
+        await NotificationsReminderManager.shared.cancelReminderIfNecessary(at: date)
     }
 
     private func keepCacheAttribute(for epic: Epic, in realm: Realm) {
