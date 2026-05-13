@@ -66,12 +66,12 @@ struct ContentView: View {
         .padding()
         .task {
             do {
-                async let _ = try jiraManager.fetchEpics()
+                try await jiraManager.fetchEpics()
             } catch {
                 SentrySDK.capture(error: error)
             }
 
-            async let _ = NotificationsReminderManager.shared.requestAuthorization()
+            await NotificationsReminderManager.shared.requestAuthorization()
             if await NotificationsReminderManager.shared.shouldRescheduleReminders() {
                 await NotificationsReminderManager.shared.scheduleAllReminders()
             }
