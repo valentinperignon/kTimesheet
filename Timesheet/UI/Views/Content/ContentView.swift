@@ -5,15 +5,17 @@
 //  Created by Valentin Perignon on 04.02.2025.
 //
 
-
 import RealmSwift
+import Sentry
 import SwiftUI
 
 enum ContentType: String, Identifiable, CaseIterable {
     case form
     case activity
 
-    var id: String { rawValue }
+    var id: String {
+        rawValue
+    }
 
     var label: LocalizedStringResource {
         switch self {
@@ -63,7 +65,11 @@ struct ContentView: View {
         }
         .padding()
         .task {
-            async let _ = try? jiraManager.fetchEpics()
+            do {
+                async let _ = try jiraManager.fetchEpics()
+            } catch {
+                SentrySDK.capture(error: error)
+            }
 
             async let _ = NotificationsReminderManager.shared.requestAuthorization()
             if await NotificationsReminderManager.shared.shouldRescheduleReminders() {
