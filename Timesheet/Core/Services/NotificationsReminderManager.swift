@@ -95,7 +95,12 @@ final class NotificationsReminderManager: Sendable {
         guard shouldSendNotifications else {
             return false
         }
-        
+
+        let status = await UNUserNotificationCenter.current().notificationSettings()
+        guard status.authorizationStatus == .authorized else {
+            return false
+        }
+
         let scheduledReminders = await UNUserNotificationCenter.current().pendingNotificationRequests()
         return scheduledReminders.count <= 2
     }
