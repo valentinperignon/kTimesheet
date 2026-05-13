@@ -27,5 +27,5 @@ final class Epic: Object, JiraResult {
 }
 
 extension Epic {
-    nonisolated(unsafe) static let unknown = Epic(id: "-1", summary: "-- Faites un choix")
+    nonisolated(unsafe) static let unknown = Epic(id: "-1", summary: String(localized: .selectAnOptionPlaceholder))
 }

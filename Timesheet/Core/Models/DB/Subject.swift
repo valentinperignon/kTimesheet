@@ -24,5 +24,5 @@ final class Subject: Object, JiraResult {
 }
 
 extension Subject {
-    nonisolated(unsafe) static let unknown = Subject(id: "-1", summary: "-- Faites un choix")
+    nonisolated(unsafe) static let unknown = Subject(id: "-1", summary: String(localized: .selectAnOptionPlaceholder))
 }
