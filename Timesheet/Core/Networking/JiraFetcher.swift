@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct JiraFetcher {
+struct JiraFetcher: Sendable {
     private let baseURL = "https://infomaniak.atlassian.net"
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -15,10 +15,11 @@ struct JiraFetcher {
         return formatter
     }()
 
-    private var authenticatedSession: URLSession!
+    private let authenticatedSession: URLSession
 
     enum DomainError: Error {
         case invalidURL
+        case httpError(Int)
     }
 
     enum RequestMethod: String {
@@ -26,7 +27,14 @@ struct JiraFetcher {
     }
 
     init(user: User) {
-        setupAuthenticatedSession(for: user)
+        let base64Token = JiraFetcher.generateToken(forUser: user)
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = [
+            "Authorization": "Basic \(base64Token)"
+        ]
+
+        authenticatedSession = URLSession(configuration: configuration)
     }
 
     func makeRequest(path: String, method: RequestMethod = .post, queryItems: [URLQueryItem]? = nil, parameters: Codable? = nil) throws -> URLRequest {
@@ -58,7 +66,10 @@ struct JiraFetcher {
 
     @discardableResult
     func performRequest(_ request: URLRequest) async throws -> Data {
-        let (data, _) = try await authenticatedSession.data(for: request)
+        let (data, response) = try await authenticatedSession.data(for: request)
+        if let httpResponse = response as? HTTPURLResponse, !(200..<300).contains(httpResponse.statusCode) {
+            throw DomainError.httpError(httpResponse.statusCode)
+        }
         return data
     }
 
@@ -66,16 +77,11 @@ struct JiraFetcher {
         let data = try await performRequest(request)
         return try JSONDecoder().decode(T.self, from: data)
     }
-
-    private mutating func setupAuthenticatedSession(for user: User) {
-        let authorizationData = Data("\(user.username):\(user.token)".utf8)
-        let base64Authorization = authorizationData.base64EncodedString()
-
-        let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = [
-            "Authorization": "Basic \(base64Authorization)"
-        ]
-
-        authenticatedSession = URLSession(configuration: configuration)
+    
+    private static func generateToken(forUser user: User) -> String {
+        let computedToken = "\(user.username):\(user.token)"
+        let tokenData = Data(computedToken.utf8)
+        
+        return tokenData.base64EncodedString()
     }
 }

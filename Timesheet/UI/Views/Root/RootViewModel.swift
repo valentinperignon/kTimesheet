@@ -8,7 +8,7 @@
 import Observation
 import SwiftUI
 
-enum RootViewState {
+enum RootViewState: Sendable {
     case hello
     case login
     case content(JiraManager)
@@ -17,7 +17,7 @@ enum RootViewState {
 
 @Observable @MainActor
 final class RootViewModel {
-    var state = RootViewState.hello
+    private(set) var state = RootViewState.hello
 
     func transition(to state: RootViewState) {
         self.state = state

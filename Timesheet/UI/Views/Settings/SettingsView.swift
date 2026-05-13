@@ -5,9 +5,10 @@
 //  Created by Valentin Perignon on 06.02.2025.
 //
 
+import Sentry
 import SwiftUI
 
-enum SettingsType: String, Identifiable, CaseIterable {
+enum SettingsType: String, Sendable, Identifiable, CaseIterable {
     case epicsList
     case reminders
 
@@ -81,8 +82,12 @@ struct SettingsView: View {
 
     private func logout() {
         Task {
-            try await UserManager.shared.removeCurrentUser()
-            rootViewModel.transition(to: .login)
+            do {
+                try await UserManager.shared.removeCurrentUser()
+                rootViewModel.transition(to: .login)
+            } catch {
+                SentrySDK.capture(error: error)
+            }
         }
     }
 

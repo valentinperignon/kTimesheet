@@ -7,6 +7,7 @@
 
 import AlertToast
 import RealmSwift
+import Sentry
 import SwiftUI
 
 struct FormView: View {
@@ -130,6 +131,8 @@ struct FormView: View {
                 let timeInterval = durationHelper.transformToTimeInterval()
 
                 isSendingForm = true
+                defer { isSendingForm = false }
+                
                 try await jiraManager.sendTime(
                     ofSubject: selectedSubject.id,
                     hours: hours,
@@ -144,13 +147,12 @@ struct FormView: View {
                     date: date,
                     draft: false
                 )
-                isSendingForm = false
 
                 isShowingSendSuccess = true
-
                 resetForm()
             } catch {
                 isShowingError = true
+                SentrySDK.capture(error: error)
             }
 
             saveChoice()
@@ -158,12 +160,20 @@ struct FormView: View {
     }
 
     private func saveDraft() {
-        guard isFormValid, let selectedSubject else { return }
+        guard isFormValid, let selectedSubject else {
+            return
+        }
 
         let durationHelper = DurationHelper(date: duration)
         let timeInterval = durationHelper.transformToTimeInterval()
 
-        ActivityRepository.addActivity(subject: selectedSubject, duration: timeInterval, comment: comment, date: date, draft: true)
+        ActivityRepository.addActivity(
+            subject: selectedSubject,
+            duration: timeInterval,
+            comment: comment,
+            date: date,
+            draft: true
+        )
 
         isShowingSaveSuccess = true
 

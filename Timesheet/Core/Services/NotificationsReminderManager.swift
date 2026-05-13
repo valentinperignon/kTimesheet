@@ -28,7 +28,7 @@ final class NotificationsReminderManager: Sendable {
         }
     }
     
-    private(set) var selecteHour: Int {
+    private(set) var selectedHour: Int {
         get {
             if UserDefaults.standard.object(forKey: "notificationsReminderSelectedHour") == nil {
                 UserDefaults.standard.set(Constants.defaultHour, forKey: "notificationsReminderSelectedHour")
@@ -39,8 +39,8 @@ final class NotificationsReminderManager: Sendable {
             UserDefaults.standard.set(newValue, forKey: "notificationsReminderSelectedHour")
         }
     }
-    
-    private(set) var selecteMinutes: Int {
+
+    private(set) var selectedMinutes: Int {
         get {
             if UserDefaults.standard.object(forKey: "notificationsReminderSelectedMinutes") == nil {
                 UserDefaults.standard.set(Constants.defaultMinutes, forKey: "notificationsReminderSelectedMinutes")
@@ -77,9 +77,9 @@ final class NotificationsReminderManager: Sendable {
     
     func updateSchedule(days: [Int], hour: Int, minutes: Int) async {
         selectedDays = days
-        selecteHour = hour
-        selecteMinutes = minutes
-        
+        selectedHour = hour
+        selectedMinutes = minutes
+
         await scheduleAllReminders()
     }
     
@@ -87,6 +87,9 @@ final class NotificationsReminderManager: Sendable {
         do {
             try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
         } catch {
+            guard (error as? UNError)?.code != UNError.notificationsNotAllowed else {
+                return
+            }
             SentrySDK.capture(error: error)
         }
     }
@@ -111,15 +114,17 @@ final class NotificationsReminderManager: Sendable {
         for week in 0..<Constants.weeksToSchedule {
             guard !Task.isCancelled else { return }
             
-            for day in selectedDays {
-                guard !Task.isCancelled else { return }
-                
-                async let _ = scheduleReminderIfNecessary(
-                    week: week,
-                    day: day,
-                    hour: selecteHour,
-                    minutes: selecteMinutes
-                )
+            await withTaskGroup { taskGroup in
+                for day in selectedDays {
+                    taskGroup.addTask {
+                        await self.scheduleReminderIfNecessary(
+                            week: week,
+                            day: day,
+                            hour: self.selectedHour,
+                            minutes: self.selectedMinutes
+                        )
+                    }
+                }
             }
         }
     }
@@ -151,14 +156,16 @@ final class NotificationsReminderManager: Sendable {
     }
     
     private func generateDateComponents(week: Int, day: Int, hour: Int, minutes: Int) -> DateComponents {
-        var dateComponents = DateComponents()
+        guard let targetWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: week, to: .now) else {
+            return DateComponents()
+        }
+
+        var dateComponents = Calendar.current.dateComponents([.weekOfYear, .yearForWeekOfYear], from: targetWeekDate)
         dateComponents.weekday = day
         dateComponents.hour = hour
         dateComponents.minute = minutes
-        dateComponents.weekOfYear = Calendar.current.component(.weekOfYear, from: .now) + week
-        dateComponents.year = Calendar.current.component(.year, from: .now)
         dateComponents.timeZone = Calendar.current.timeZone
-        
+
         return dateComponents
     }
     

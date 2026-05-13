@@ -13,7 +13,13 @@ struct TimesheetData: Codable {
     let started: Date
 
     init(hours: Int, minutes: Int, date: Date, comment: String) {
-        timeSpent = "\(hours)h \(minutes)m"
+        if hours > 0 && minutes > 0 {
+            timeSpent = "\(hours)h \(minutes)m"
+        } else if hours > 0 {
+            timeSpent = "\(hours)h"
+        } else {
+            timeSpent = "\(minutes)m"
+        }
         self.started = date
         self.comment = comment
     }

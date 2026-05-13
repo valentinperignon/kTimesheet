@@ -14,7 +14,7 @@ struct TimesheetApp: App {
         SentrySDK.start { options in
             options.dsn = "https://0113a044a193d56421fbf3d1a8cbab9c@o4509079449698304.ingest.de.sentry.io/4509079459856464"
             options.sendDefaultPii = true
-            options.tracesSampleRate = 1.0
+            options.tracesSampleRate = 0.33
             options.enableMetricKit = true
         }
     }

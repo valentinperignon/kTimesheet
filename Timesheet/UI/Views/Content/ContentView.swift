@@ -9,12 +9,12 @@ import RealmSwift
 import Sentry
 import SwiftUI
 
-enum ContentType: String, Identifiable, CaseIterable {
+enum ContentType: String, Sendable, Identifiable, CaseIterable {
     case form
     case activity
 
     var id: String {
-        rawValue
+        return rawValue
     }
 
     var label: LocalizedStringResource {
@@ -28,23 +28,13 @@ enum ContentType: String, Identifiable, CaseIterable {
 }
 
 struct ContentView: View {
-    @Environment(RootViewModel.self) private var rootViewModel
     @Environment(JiraManager.self) private var jiraManager
 
     @State private var contentType = ContentType.form
 
     var body: some View {
         VStack {
-            HStack {
-                Text(verbatim: Constants.appName)
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Button(action: openSettings) {
-                    Label(.settingsTitle, systemImage: "gear")
-                        .labelStyle(.iconOnly)
-                }
-            }
+            ContentHeaderView()
 
             Picker(.pickerContentType, selection: $contentType) {
                 ForEach(ContentType.allCases) { contentType in
@@ -76,10 +66,6 @@ struct ContentView: View {
                 await NotificationsReminderManager.shared.scheduleAllReminders()
             }
         }
-    }
-
-    private func openSettings() {
-        rootViewModel.transition(to: .settings)
     }
 }
 

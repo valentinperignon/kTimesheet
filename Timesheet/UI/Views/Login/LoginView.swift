@@ -6,6 +6,7 @@
 //
 
 import AlertToast
+import Sentry
 import SwiftUI
 
 struct LoginView: View {
@@ -80,6 +81,7 @@ struct LoginView: View {
                 rootViewModel.transition(to: .content(jiraManager))
             } catch {
                 isShowingError = true
+                SentrySDK.capture(error: error)
             }
         }
     }

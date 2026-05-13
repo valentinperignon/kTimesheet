@@ -27,7 +27,7 @@ struct HelloView: View {
                 .controlSize(.small)
         }
         .fixedSize(horizontal: true, vertical: false)
-        .padding(24)
+        .padding(32)
         .task {
             let currentUser = try? await UserManager.shared.setCurrentUser()
             if currentUser != nil, let jiraManager = UserManager.shared.jiraManager {

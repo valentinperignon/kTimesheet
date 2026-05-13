@@ -96,8 +96,8 @@ struct RemindersView: View {
         selectedDays = Set(NotificationsReminderManager.shared.selectedDays.compactMap { SchedulableDay(rawValue: $0) })
         
         var dateComponents = DateComponents()
-        dateComponents.hour = NotificationsReminderManager.shared.selecteHour
-        dateComponents.minute = NotificationsReminderManager.shared.selecteMinutes
+        dateComponents.hour = NotificationsReminderManager.shared.selectedHour
+        dateComponents.minute = NotificationsReminderManager.shared.selectedMinutes
         selectedTime = Calendar.current.date(from: dateComponents) ?? .now
     }
     
@@ -112,8 +112,8 @@ struct RemindersView: View {
         }
         
         if time {
-            let hourIsDifferent = NotificationsReminderManager.shared.selecteHour != Calendar.current.component(.hour, from: selectedTime)
-            let minutesIsDifferent = NotificationsReminderManager.shared.selecteMinutes != Calendar.current.component(.minute, from: selectedTime)
+            let hourIsDifferent = NotificationsReminderManager.shared.selectedHour != Calendar.current.component(.hour, from: selectedTime)
+            let minutesIsDifferent = NotificationsReminderManager.shared.selectedMinutes != Calendar.current.component(.minute, from: selectedTime)
             
             if hourIsDifferent || minutesIsDifferent {
                 return true
@@ -129,10 +129,6 @@ struct RemindersView: View {
         } else {
             selectedDays.insert(day)
         }
-    }
-    
-    private func toggleReminders() {
-        
     }
     
     private func saveReminders() {
