@@ -13,9 +13,7 @@ struct ActivitiesView: View {
 
     var body: some View {
         VStack {
-            DatePicker(.activitiesDatePicker, selection: $date, displayedComponents: .date)
-                .datePickerStyle(.stepperField)
-                .labelsHidden()
+            ActivitiesDatePicker(date: $date)
 
             ActivitiesListView(date: date)
         }
