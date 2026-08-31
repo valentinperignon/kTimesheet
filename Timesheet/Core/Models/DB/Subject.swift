@@ -26,3 +26,18 @@ final class Subject: Object, JiraResult {
 extension Subject {
     nonisolated(unsafe) static let unknown = Subject(id: "-1", summary: String(localized: .selectAnOptionPlaceholder))
 }
+
+/// Nature of the work a subject stands for, which most epics declare a subject for.
+enum SubjectKind: String, CaseIterable {
+    case increment
+    case maintenance
+}
+
+extension Subject {
+    /// Matches loosely, as summaries spell the kind in either language and casing.
+    var kind: SubjectKind? {
+        return SubjectKind.allCases.first {
+            summary.range(of: $0.rawValue, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+        }
+    }
+}
