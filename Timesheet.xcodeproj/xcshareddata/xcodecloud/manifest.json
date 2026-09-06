@@ -1,0 +1,9 @@
+{
+  "id" : "716560d3-34d9-4d7f-911c-c8751458af7a",
+  "targets" : [
+    {
+      "id" : "0B1770FF-B843-4A67-B015-CC213E45758F",
+      "name" : "kTimesheet"
+    }
+  ]
+}
