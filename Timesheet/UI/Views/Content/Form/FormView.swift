@@ -21,6 +21,7 @@ struct FormView: View {
 
     @State private var epicID = Epic.unknown.id
     @State private var subjectID = Subject.unknown.id
+    @State private var preferredSubjectKind: SubjectKind?
     @State private var duration = Calendar.current.startOfDay(for: .now)
     @State private var date = Date.now
     @State private var comment = ""
@@ -58,10 +59,12 @@ struct FormView: View {
             .task(id: epicID) {
                 guard selectedEpic != .unknown else { return }
                 try? await jiraManager.fetchSubjects(of: epicID)
+                selectPreferredSubject()
             }
             .onChange(of: epicID) { _, _ in
                 guard !selectedEpic.subjects.contains(where: { $0.id == subjectID }) else { return }
                 subjectID = Subject.unknown.id
+                selectPreferredSubject()
             }
 
             Picker(.fieldSubject, selection: $subjectID) {
@@ -74,6 +77,10 @@ struct FormView: View {
                 }
             }
             .disabled(selectedEpic.subjects.isEmpty)
+            .onChange(of: subjectID) { _, _ in
+                guard let kind = selectedSubject?.kind else { return }
+                preferredSubjectKind = kind
+            }
 
             DatePicker(.fieldTime, selection: $duration, displayedComponents: .hourAndMinute)
 
@@ -119,6 +126,14 @@ struct FormView: View {
 
         epicID = lastSelectedEpic
         subjectID = lastSelectedSubject
+    }
+
+    /// Carries the last picked kind over to the new epic, as it offers the same kinds under different subjects.
+    private func selectPreferredSubject() {
+        guard subjectID == Subject.unknown.id, let preferredSubjectKind else { return }
+        guard let subject = selectedEpic.subjects.first(where: { $0.kind == preferredSubjectKind }) else { return }
+
+        subjectID = subject.id
     }
 
     private func sendTimesheet() {
