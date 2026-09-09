@@ -19,12 +19,7 @@ struct FormView: View {
         sortDescriptor: SortDescriptor(keyPath: "summary", ascending: true)
     ) var epics
 
-    @State private var epicID = Epic.unknown.id
-    @State private var subjectID = Subject.unknown.id
-    @State private var preferredSubjectKind: SubjectKind?
-    @State private var duration = Calendar.current.startOfDay(for: .now)
-    @State private var date = Date.now
-    @State private var comment = ""
+    @Bindable var state: FormState
 
     @State private var isSendingForm = false
 
@@ -33,20 +28,20 @@ struct FormView: View {
     @State private var isShowingError = false
 
     private var selectedEpic: Epic {
-        return epics.first { $0.id == epicID } ?? .unknown
+        return epics.first { $0.id == state.epicID } ?? .unknown
     }
 
     private var selectedSubject: Subject? {
-        return selectedEpic.subjects.first { $0.id == subjectID }
+        return selectedEpic.subjects.first { $0.id == state.subjectID }
     }
 
     private var isFormValid: Bool {
-        return epicID != Epic.unknown.id && subjectID != Subject.unknown.id
+        return state.epicID != Epic.unknown.id && state.subjectID != Subject.unknown.id
     }
 
     var body: some View {
         Form {
-            Picker(.fieldEpic, selection: $epicID) {
+            Picker(.fieldEpic, selection: $state.epicID) {
                 Text(Epic.unknown.summary)
                     .tag(Epic.unknown.id)
 
@@ -56,18 +51,18 @@ struct FormView: View {
                 }
             }
             .disabled(epics.isEmpty)
-            .task(id: epicID) {
+            .task(id: state.epicID) {
                 guard selectedEpic != .unknown else { return }
-                try? await jiraManager.fetchSubjects(of: epicID)
+                try? await jiraManager.fetchSubjects(of: state.epicID)
                 selectPreferredSubject()
             }
-            .onChange(of: epicID) { _, _ in
-                guard !selectedEpic.subjects.contains(where: { $0.id == subjectID }) else { return }
-                subjectID = Subject.unknown.id
+            .onChange(of: state.epicID) { _, _ in
+                guard !selectedEpic.subjects.contains(where: { $0.id == state.subjectID }) else { return }
+                state.subjectID = Subject.unknown.id
                 selectPreferredSubject()
             }
 
-            Picker(.fieldSubject, selection: $subjectID) {
+            Picker(.fieldSubject, selection: $state.subjectID) {
                 Text(Subject.unknown.summary)
                     .tag(Subject.unknown.id)
 
@@ -77,16 +72,16 @@ struct FormView: View {
                 }
             }
             .disabled(selectedEpic.subjects.isEmpty)
-            .onChange(of: subjectID) { _, _ in
+            .onChange(of: state.subjectID) { _, _ in
                 guard let kind = selectedSubject?.kind else { return }
-                preferredSubjectKind = kind
+                state.preferredSubjectKind = kind
             }
 
-            DatePicker(.fieldTime, selection: $duration, displayedComponents: .hourAndMinute)
+            DatePicker(.fieldTime, selection: $state.duration, displayedComponents: .hourAndMinute)
 
-            DatePicker(.fieldDate, selection: $date)
+            DatePicker(.fieldDate, selection: $state.date)
 
-            TextField(.fieldComment, text: $comment, axis: .vertical)
+            TextField(.fieldComment, text: $state.comment, axis: .vertical)
                 .lineLimit(2...)
                 .padding(.bottom, 8)
 
@@ -106,9 +101,6 @@ struct FormView: View {
             .controlSize(.large)
             .disabled(!isFormValid)
         }
-        .onAppear {
-            setStateWithLastSelection()
-        }
         .toast(isPresenting: $isShowingError) {
             AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
         }
@@ -120,20 +112,12 @@ struct FormView: View {
         }
     }
 
-    private func setStateWithLastSelection() {
-        guard let lastSelectedEpic = UserDefaults.standard.lastSelectedEpic,
-              let lastSelectedSubject = UserDefaults.standard.lastSelectedSubject else { return }
-
-        epicID = lastSelectedEpic
-        subjectID = lastSelectedSubject
-    }
-
     /// Carries the last picked kind over to the new epic, as it offers the same kinds under different subjects.
     private func selectPreferredSubject() {
-        guard subjectID == Subject.unknown.id, let preferredSubjectKind else { return }
+        guard state.subjectID == Subject.unknown.id, let preferredSubjectKind = state.preferredSubjectKind else { return }
         guard let subject = selectedEpic.subjects.first(where: { $0.kind == preferredSubjectKind }) else { return }
 
-        subjectID = subject.id
+        state.subjectID = subject.id
     }
 
     private func sendTimesheet() {
@@ -141,7 +125,7 @@ struct FormView: View {
 
         Task {
             do {
-                let durationHelper = DurationHelper(date: duration)
+                let durationHelper = DurationHelper(date: state.duration)
                 let (hours, minutes) = durationHelper.transformToHoursAndMinutes()
                 let timeInterval = durationHelper.transformToTimeInterval()
 
@@ -152,19 +136,19 @@ struct FormView: View {
                     ofSubject: selectedSubject.id,
                     hours: hours,
                     minutes: minutes,
-                    date: date,
-                    comment: comment
+                    date: state.date,
+                    comment: state.comment
                 )
                 ActivityRepository.addActivity(
                     subject: selectedSubject,
                     duration: timeInterval,
-                    comment: comment,
-                    date: date,
+                    comment: state.comment,
+                    date: state.date,
                     draft: false
                 )
 
                 isShowingSendSuccess = true
-                resetForm()
+                state.resetEntry()
             } catch {
                 isShowingError = true
                 SentrySDK.capture(error: error)
@@ -179,36 +163,30 @@ struct FormView: View {
             return
         }
 
-        let durationHelper = DurationHelper(date: duration)
+        let durationHelper = DurationHelper(date: state.duration)
         let timeInterval = durationHelper.transformToTimeInterval()
 
         ActivityRepository.addActivity(
             subject: selectedSubject,
             duration: timeInterval,
-            comment: comment,
-            date: date,
+            comment: state.comment,
+            date: state.date,
             draft: true
         )
 
         isShowingSaveSuccess = true
 
         saveChoice()
-        resetForm()
+        state.resetEntry()
     }
 
     private func saveChoice() {
         UserDefaults.standard.lastSelectedEpic = selectedEpic.id
         UserDefaults.standard.lastSelectedSubject = selectedSubject?.id
     }
-
-    private func resetForm() {
-        duration = Calendar.current.startOfDay(for: .now)
-        date = .now
-        comment = ""
-    }
 }
 
 #Preview {
-    FormView()
+    FormView(state: FormState())
         .environment(PreviewHelper.jiraManager)
 }
