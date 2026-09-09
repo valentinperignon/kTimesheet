@@ -31,6 +31,7 @@ struct ContentView: View {
     @Environment(JiraManager.self) private var jiraManager
 
     @State private var contentType = ContentType.form
+    @State private var formState = FormState()
 
     var body: some View {
         VStack {
@@ -48,7 +49,7 @@ struct ContentView: View {
 
             switch contentType {
             case .form:
-                FormView()
+                FormView(state: formState)
             case .activity:
                 ActivitiesView()
             }
