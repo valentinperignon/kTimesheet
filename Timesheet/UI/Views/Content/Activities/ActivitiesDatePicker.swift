@@ -18,19 +18,23 @@ struct ActivitiesDatePicker: View {
 
     var body: some View {
         HStack {
-            DatePicker(.activitiesDatePicker, selection: $date, displayedComponents: .date)
-                .datePickerStyle(.field)
+            HStack(spacing: 2) {
+                DatePicker(.activitiesDatePicker, selection: $date, displayedComponents: .date)
+                    .datePickerStyle(.field)
+                    .labelsHidden()
+                    .fixedSize()
+
+                Stepper(onIncrement: { shiftDate(byDays: 1) }, onDecrement: { shiftDate(byDays: -1) }) {
+                    Text(.activitiesDatePicker)
+                }
                 .labelsHidden()
-                .fixedSize()
-
-            Stepper(onIncrement: { shiftDate(byDays: 1) }, onDecrement: { shiftDate(byDays: -1) }) {
-                Text(.activitiesDatePicker)
             }
-            .labelsHidden()
 
+            // Kept last so that its varying width never shifts the controls away from the pointer.
             Text(weekday)
                 .foregroundStyle(.secondary)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func shiftDate(byDays days: Int) {
