@@ -7,14 +7,10 @@
 
 import SwiftUI
 
-/// Date picker showing the weekday of the selection, whose stepper moves by a whole day so that
-/// month and year carry over on their own.
 struct ActivitiesDatePicker: View {
+    @Environment(\.calendar) private var calendar
+    
     @Binding var date: Date
-
-    private var weekday: String {
-        return date.formatted(.dateTime.weekday(.wide))
-    }
 
     var body: some View {
         HStack {
@@ -22,7 +18,6 @@ struct ActivitiesDatePicker: View {
                 DatePicker(.activitiesDatePicker, selection: $date, displayedComponents: .date)
                     .datePickerStyle(.field)
                     .labelsHidden()
-                    .fixedSize()
 
                 Stepper(onIncrement: { shiftDate(byDays: 1) }, onDecrement: { shiftDate(byDays: -1) }) {
                     Text(.activitiesDatePicker)
@@ -30,11 +25,16 @@ struct ActivitiesDatePicker: View {
                 .labelsHidden()
             }
 
-            // Kept last so that its varying width never shifts the controls away from the pointer.
-            Text(weekday)
-                .foregroundStyle(.secondary)
+            ZStack {
+                Text(date, format: .dateTime.weekday(.wide))
+                    .foregroundStyle(.secondary)
+                
+                ForEach(calendar.weekdaySymbols, id: \.self) { weekday in
+                    Text(weekday)
+                        .opacity(0)
+                }
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func shiftDate(byDays days: Int) {

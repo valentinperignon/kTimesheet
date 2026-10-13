@@ -112,7 +112,6 @@ struct FormView: View {
         }
     }
 
-    /// Carries the last picked kind over to the new epic, as it offers the same kinds under different subjects.
     private func selectPreferredSubject() {
         guard state.subjectID == Subject.unknown.id, let preferredSubjectKind = state.preferredSubjectKind else { return }
         guard let subject = selectedEpic.subjects.first(where: { $0.kind == preferredSubjectKind }) else { return }
