@@ -20,9 +20,15 @@ struct TimesheetApp: App {
     }
 
     var body: some Scene {
+        #if os(macOS)
         MenuBarExtra(.kTimesheet, systemImage: "calendar.badge.clock") {
             RootView()
         }
         .menuBarExtraStyle(.window)
+        #else
+        WindowGroup {
+            RootView()
+        }
+        #endif
     }
 }

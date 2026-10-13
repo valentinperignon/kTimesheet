@@ -41,66 +41,71 @@ struct FormView: View {
 
     var body: some View {
         Form {
-            Picker(.fieldEpic, selection: $state.epicID) {
-                Text(Epic.unknown.summary)
-                    .tag(Epic.unknown.id)
+            Section {
+                DatePicker(.fieldDate, selection: $state.date)
+            }
 
-                ForEach(epics) { epic in
-                    Text(epic.summary)
-                        .tag(epic.id)
+            Section {
+                Picker(.fieldEpic, selection: $state.epicID) {
+                    Text(Epic.unknown.summary)
+                        .tag(Epic.unknown.id)
+
+                    ForEach(epics) { epic in
+                        Text(epic.summary)
+                            .tag(epic.id)
+                    }
                 }
-            }
-            .disabled(epics.isEmpty)
-            .task(id: state.epicID) {
-                guard selectedEpic != .unknown else { return }
-                try? await jiraManager.fetchSubjects(of: state.epicID)
-                selectPreferredSubject()
-            }
-            .onChange(of: state.epicID) { _, _ in
-                guard !selectedEpic.subjects.contains(where: { $0.id == state.subjectID }) else { return }
-                state.subjectID = Subject.unknown.id
-                selectPreferredSubject()
-            }
-
-            Picker(.fieldSubject, selection: $state.subjectID) {
-                Text(Subject.unknown.summary)
-                    .tag(Subject.unknown.id)
-
-                ForEach(selectedEpic.subjects) { subject in
-                    Text(subject.summary)
-                        .tag(subject.id)
+                .disabled(epics.isEmpty)
+                .task(id: state.epicID) {
+                    guard selectedEpic != .unknown else { return }
+                    try? await jiraManager.fetchSubjects(of: state.epicID)
+                    selectPreferredSubject()
                 }
+                .onChange(of: state.epicID) { _, _ in
+                    guard !selectedEpic.subjects.contains(where: { $0.id == state.subjectID }) else { return }
+                    state.subjectID = Subject.unknown.id
+                    selectPreferredSubject()
+                }
+
+                Picker(.fieldSubject, selection: $state.subjectID) {
+                    Text(Subject.unknown.summary)
+                        .tag(Subject.unknown.id)
+
+                    ForEach(selectedEpic.subjects) { subject in
+                        Text(subject.summary)
+                            .tag(subject.id)
+                    }
+                }
+                .disabled(selectedEpic.subjects.isEmpty)
+                .onChange(of: state.subjectID) { _, _ in
+                    guard let kind = selectedSubject?.kind else { return }
+                    state.preferredSubjectKind = kind
+                }
+
+                DatePicker(.fieldTime, selection: $state.duration, displayedComponents: .hourAndMinute)
+
+                TextField(.fieldComment, text: $state.comment, axis: .vertical)
+                    .lineLimit(2...)
+                    #if os(macOS)
+                    .padding(.bottom, 8)
+                    #endif
             }
-            .disabled(selectedEpic.subjects.isEmpty)
-            .onChange(of: state.subjectID) { _, _ in
-                guard let kind = selectedSubject?.kind else { return }
-                state.preferredSubjectKind = kind
-            }
 
-            DatePicker(.fieldTime, selection: $state.duration, displayedComponents: .hourAndMinute)
-
-            DatePicker(.fieldDate, selection: $state.date)
-
-            TextField(.fieldComment, text: $state.comment, axis: .vertical)
-                .lineLimit(2...)
-                .padding(.bottom, 8)
-
+            #if os(macOS)
             HStack {
-                LoadingButton(
-                    label: .buttonSend,
-                    systemImage: "checkmark.circle",
-                    isLoading: isSendingForm,
-                    action: sendTimesheet
-                )
-
-                Button(action: saveDraft) {
-                    Label(.buttonSave, systemImage: "plus.circle")
-                }
+                formButtons
             }
             .buttonStyle(.bordered)
             .controlSize(.large)
-            .disabled(!isFormValid)
+            #endif
         }
+        #if os(iOS)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            FormActionBar {
+                formButtons
+            }
+        }
+        #endif
         .toast(isPresenting: $isShowingError) {
             AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
         }
@@ -110,6 +115,40 @@ struct FormView: View {
         .toast(isPresenting: $isShowingSaveSuccess) {
             AlertToast(displayMode: .hud, type: .complete(.accentColor), title: String(localized: .toastSaved))
         }
+    }
+
+    @ViewBuilder
+    private var formButtons: some View {
+        LoadingButton(
+            label: .buttonSend,
+            systemImage: "checkmark.circle",
+            isLoading: isSendingForm,
+            action: sendTimesheet,
+            expandsToFill: expandsActions
+        )
+        #if os(iOS)
+        .buttonStyle(.borderedProminent)
+        #endif
+        .disabled(!isFormValid || isSendingForm)
+
+        Button(action: saveDraft) {
+            Label(.buttonSave, systemImage: "plus.circle")
+                #if os(iOS)
+                .frame(maxWidth: .infinity, minHeight: 28)
+                #endif
+        }
+        #if os(iOS)
+        .buttonStyle(.bordered)
+        #endif
+        .disabled(!isFormValid || isSendingForm)
+    }
+
+    private var expandsActions: Bool {
+        #if os(iOS)
+        true
+        #else
+        false
+        #endif
     }
 
     private func selectPreferredSubject() {
@@ -130,7 +169,7 @@ struct FormView: View {
 
                 isSendingForm = true
                 defer { isSendingForm = false }
-                
+
                 try await jiraManager.sendTime(
                     ofSubject: selectedSubject.id,
                     hours: hours,

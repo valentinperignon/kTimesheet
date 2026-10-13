@@ -16,7 +16,14 @@ struct RootView: View {
             case .hello:
                 HelloView()
             case .login:
+                #if os(iOS)
+                NavigationStack {
+                    LoginView()
+                        .navigationTitle(Constants.appName)
+                }
+                #else
                 LoginView()
+                #endif
             case .content(let jiraManager):
                 ContentView()
                     .environment(jiraManager)

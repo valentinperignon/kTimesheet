@@ -38,6 +38,9 @@ struct ActivitiesListView: View {
         VStack(alignment: .leading) {
             if activities.isEmpty {
                 ActivitiesEmptyState()
+                #if os(iOS)
+                    .frame(maxHeight: .infinity)
+                #endif
             } else {
                 ActivitiesHeader(activities: activities)
 

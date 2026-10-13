@@ -31,16 +31,27 @@ struct LoginView: View {
 
     var body: some View {
         Form {
+            #if os(macOS)
             Text(verbatim: Constants.appName)
                 .font(.title)
+            #endif
 
             TextField(String(localized: .fieldEmail), text: $username)
+                #if os(macOS)
                 .textFieldStyle(.roundedBorder)
+                #endif
                 .textContentType(.emailAddress)
+                #if os(iOS)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                #endif
                 .onSubmit(login)
 
             SecureField(.fieldToken, text: $token)
+                #if os(macOS)
                 .textFieldStyle(.roundedBorder)
+                #endif
                 .textContentType(.password)
                 .onSubmit(login)
 
@@ -48,20 +59,45 @@ struct LoginView: View {
                 Text(.buttonNoAtlassianToken)
                     .font(.caption)
             }
+            #if os(macOS)
             .buttonStyle(.link)
+            #else
+            .buttonStyle(.borderless)
+            #endif
             .padding(.bottom, 8)
 
-            Button(action: login) {
-                Label(.buttonLogin, systemImage: "person")
-            }
-            .buttonStyle(.bordered)
-            .controlSize(.large)
-            .disabled(!isFormValid)
+            #if os(macOS)
+            loginButton
+            #endif
         }
+        #if os(macOS)
         .padding()
+        #else
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            FormActionBar {
+                loginButton
+            }
+        }
+        #endif
         .toast(isPresenting: $isShowingError) {
             AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
         }
+    }
+
+    private var loginButton: some View {
+        Button(action: login) {
+            Label(.buttonLogin, systemImage: "person")
+                #if os(iOS)
+                .frame(maxWidth: .infinity, minHeight: 28)
+                #endif
+        }
+        #if os(iOS)
+        .buttonStyle(.borderedProminent)
+        #else
+        .buttonStyle(.bordered)
+        #endif
+        .controlSize(.large)
+        .disabled(!isFormValid)
     }
 
     private func didTapHelpButton() {

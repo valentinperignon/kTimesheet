@@ -12,6 +12,7 @@ struct LoadingButton: View {
     let systemImage: String
     let isLoading: Bool
     let action: () -> Void
+    var expandsToFill = false
 
     var body: some View {
         Button(action: action) {
@@ -24,6 +25,8 @@ struct LoadingButton: View {
                     .controlSize(.small)
                     .opacity(isLoading ? 1 : 0)
             }
+            .frame(maxWidth: expandsToFill ? .infinity : nil)
+            .frame(minHeight: expandsToFill ? 28 : nil)
         }
     }
 }

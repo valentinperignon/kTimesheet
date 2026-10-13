@@ -16,7 +16,11 @@ struct ActivitiesDatePicker: View {
         HStack {
             HStack(spacing: 2) {
                 DatePicker(.activitiesDatePicker, selection: $date, displayedComponents: .date)
+                    #if os(macOS)
                     .datePickerStyle(.field)
+                    #else
+                    .datePickerStyle(.compact)
+                    #endif
                     .labelsHidden()
 
                 Stepper(onIncrement: { shiftDate(byDays: 1) }, onDecrement: { shiftDate(byDays: -1) }) {

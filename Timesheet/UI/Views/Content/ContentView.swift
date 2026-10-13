@@ -31,30 +31,56 @@ struct ContentView: View {
     @Environment(JiraManager.self) private var jiraManager
 
     @State private var contentType = ContentType.form
+    @State private var isShowingSettings = false
     @State private var formState = FormState()
 
     var body: some View {
-        VStack {
-            ContentHeaderView()
+        Group {
+            #if os(iOS)
+            TabView(selection: $contentType) {
+                NavigationStack {
+                    FormView(state: formState)
+                        .navigationTitle(Text(ContentType.form.label))
+                        .toolbar { settingsToolbar }
+                }
+                .tabItem { Label(ContentType.form.label, systemImage: "square.and.pencil") }
+                .tag(ContentType.form)
 
-            Picker(.pickerContentType, selection: $contentType) {
-                ForEach(ContentType.allCases) { contentType in
-                    Text(contentType.label)
-                        .tag(contentType)
+                NavigationStack {
+                    ActivitiesView()
+                        .navigationTitle(Text(ContentType.activity.label))
+                        .toolbar { settingsToolbar }
+                }
+                .tabItem { Label(ContentType.activity.label, systemImage: "clock") }
+                .tag(ContentType.activity)
+            }
+            .sheet(isPresented: $isShowingSettings) {
+                NavigationStack {
+                    SettingsView()
                 }
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .padding(.bottom, 8)
-
-            switch contentType {
-            case .form:
-                FormView(state: formState)
-            case .activity:
-                ActivitiesView()
+            #else
+            VStack {
+                ContentHeaderView()
+                Picker(.pickerContentType, selection: $contentType) {
+                    ForEach(ContentType.allCases) { contentType in
+                        Text(contentType.label)
+                            .tag(contentType)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(.bottom, 8)
+                switch contentType {
+                case .form:
+                    FormView(state: formState)
+                case .activity:
+                    ActivitiesView()
+                }
             }
+            .padding()
+            #endif
         }
-        .padding()
         .task {
             do {
                 try await jiraManager.fetchEpics()
@@ -68,6 +94,19 @@ struct ContentView: View {
             }
         }
     }
+
+    #if os(iOS)
+    @ToolbarContentBuilder
+    private var settingsToolbar: some ToolbarContent {
+        ToolbarItem(placement: .primaryAction) {
+            Button {
+                isShowingSettings = true
+            } label: {
+                Label(.settingsTitle, systemImage: "gear")
+            }
+        }
+    }
+    #endif
 }
 
 #Preview {

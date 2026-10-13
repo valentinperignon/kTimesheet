@@ -25,11 +25,51 @@ enum SettingsType: String, Sendable, Identifiable, CaseIterable {
 }
 
 struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(RootViewModel.self) private var rootViewModel
     
     @State private var settingsType = SettingsType.epicsList
 
     var body: some View {
+        Group {
+            #if os(iOS)
+            List {
+                NavigationLink {
+                    EpicsList()
+                        .navigationTitle(Text(.titleEpics))
+                } label: {
+                    Label(.titleEpics, systemImage: "list.bullet")
+                }
+
+                NavigationLink {
+                    RemindersView()
+                        .navigationTitle(Text(.titleReminders))
+                } label: {
+                    Label(.titleReminders, systemImage: "bell")
+                }
+            }
+            #else
+            macSettings
+            #endif
+        }
+        #if os(iOS)
+        .navigationTitle(Text(.settingsTitle))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("button.done") { dismiss() }
+            }
+            ToolbarItem(placement: .cancellationAction) {
+                Button(action: logout) {
+                    Label(.buttonLogout, systemImage: "person.slash")
+                }
+            }
+        }
+        #endif
+    }
+
+    #if os(macOS)
+    private var macSettings: some View {
         VStack {
             HStack {
                 Button(action: back) {
@@ -52,7 +92,7 @@ struct SettingsView: View {
             }
             .padding([.horizontal, .top])
             .padding(.bottom, 8)
-            
+
             Picker(.accessibilitySettingsType, selection: $settingsType) {
                 ForEach(SettingsType.allCases) { settingType in
                     Text(settingType.label)
@@ -72,6 +112,7 @@ struct SettingsView: View {
             }
         }
     }
+    #endif
 
     private func back() {
         guard let jiraManager = UserManager.shared.jiraManager else {
@@ -84,6 +125,9 @@ struct SettingsView: View {
         Task {
             do {
                 try await UserManager.shared.removeCurrentUser()
+                #if os(iOS)
+                dismiss()
+                #endif
                 rootViewModel.transition(to: .login)
             } catch {
                 SentrySDK.capture(error: error)
@@ -91,9 +135,11 @@ struct SettingsView: View {
         }
     }
 
+    #if os(macOS)
     private func quit() {
         NSRunningApplication.current.terminate()
     }
+    #endif
 }
 
 #Preview {

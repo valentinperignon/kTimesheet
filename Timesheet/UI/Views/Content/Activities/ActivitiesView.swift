@@ -14,7 +14,6 @@ struct ActivitiesView: View {
     var body: some View {
         VStack {
             ActivitiesDatePicker(date: $date)
-
             ActivitiesListView(date: date)
         }
     }
