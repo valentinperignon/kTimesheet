@@ -34,18 +34,28 @@ struct SettingsView: View {
         Group {
             #if os(iOS)
             List {
-                NavigationLink {
-                    EpicsList()
-                        .navigationTitle(Text(.titleEpics))
-                } label: {
-                    Label(.titleEpics, systemImage: "list.bullet")
+                Section {
+                    NavigationLink {
+                        EpicsList()
+                            .navigationTitle(Text(.titleEpics))
+                            .toolbar { closeToolbar }
+                    } label: {
+                        Label(.titleEpics, systemImage: "list.bullet")
+                    }
+
+                    NavigationLink {
+                        RemindersView()
+                            .navigationTitle(Text(.titleReminders))
+                            .toolbar { closeToolbar }
+                    } label: {
+                        Label(.titleReminders, systemImage: "bell")
+                    }
                 }
 
-                NavigationLink {
-                    RemindersView()
-                        .navigationTitle(Text(.titleReminders))
-                } label: {
-                    Label(.titleReminders, systemImage: "bell")
+                Section {
+                    Button(role: .destructive, action: logout) {
+                        Text(.buttonLogout)
+                    }
                 }
             }
             #else
@@ -55,18 +65,23 @@ struct SettingsView: View {
         #if os(iOS)
         .navigationTitle(Text(.settingsTitle))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("button.done") { dismiss() }
-            }
-            ToolbarItem(placement: .cancellationAction) {
-                Button(action: logout) {
-                    Label(.buttonLogout, systemImage: "person.slash")
-                }
-            }
-        }
+        .toolbar { closeToolbar }
         #endif
     }
+
+    #if os(iOS)
+    @ToolbarContentBuilder
+    private var closeToolbar: some ToolbarContent {
+        ToolbarItem(id: "closeSettings", placement: .primaryAction) {
+            Button {
+                dismiss()
+            } label: {
+                Label("button.close", systemImage: "xmark")
+                    .labelStyle(.iconOnly)
+            }
+        }
+    }
+    #endif
 
     #if os(macOS)
     private var macSettings: some View {

@@ -12,10 +12,20 @@ struct ActivitiesView: View {
     @State private var date = Date.now
 
     var body: some View {
+        #if os(iOS)
+        ActivitiesListView(date: date)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                ActivitiesDatePicker(date: $date)
+                    .padding()
+                    .background(.bar, in: .containerRelative)
+                    .padding()
+            }
+        #else
         VStack {
             ActivitiesDatePicker(date: $date)
             ActivitiesListView(date: date)
         }
+        #endif
     }
 }
 

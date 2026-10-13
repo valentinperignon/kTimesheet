@@ -35,33 +35,54 @@ struct ActivitiesListView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            if activities.isEmpty {
-                ActivitiesEmptyState()
-                #if os(iOS)
-                    .frame(maxHeight: .infinity)
-                #endif
-            } else {
-                ActivitiesHeader(activities: activities)
-
-                ScrollView {
-                    VStack(alignment: .leading) {
+        Group {
+            #if os(iOS)
+            List {
+                if !activities.isEmpty {
+                    Section {
                         ForEach(activities) { activity in
-                            ActivityView(activity: activity)
+                            ActivityView(activity: activity, padding: 12, radius: 0)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        }
+                    } header: {
+                        ActivitiesHeader(activities: activities)
+                            .textCase(nil)
+                    }
+
+                    if containsDraft {
+                        Section {
+                            sendDraftsButton
                         }
                     }
                 }
-
-                if containsDraft {
-                    LoadingButton(
-                        label: .buttonSend,
-                        systemImage: "checkmark.circle",
-                        isLoading: isSendingForm,
-                        action: sendDrafts
-                    )
-                    .controlSize(.large)
+            }
+            .listStyle(.insetGrouped)
+            .overlay {
+                if activities.isEmpty {
+                    ActivitiesEmptyState()
                 }
             }
+            #else
+            VStack(alignment: .leading) {
+                if activities.isEmpty {
+                    ActivitiesEmptyState()
+                } else {
+                    ActivitiesHeader(activities: activities)
+
+                    ScrollView {
+                        LazyVStack(alignment: .leading) {
+                            ForEach(activities) { activity in
+                                ActivityView(activity: activity)
+                            }
+                        }
+                    }
+
+                    if containsDraft {
+                        sendDraftsButton
+                    }
+                }
+            }
+            #endif
         }
         .toast(isPresenting: $isShowingError) {
             AlertToast(displayMode: .hud, type: .error(.red), title: String(localized: .toastError))
@@ -69,6 +90,17 @@ struct ActivitiesListView: View {
         .toast(isPresenting: $isShowingSuccess) {
             AlertToast(displayMode: .hud, type: .complete(.accentColor), title: String(localized: .toastSent))
         }
+    }
+
+    private var sendDraftsButton: some View {
+        LoadingButton(
+            label: .buttonSend,
+            systemImage: "checkmark.circle",
+            isLoading: isSendingForm,
+            action: sendDrafts
+        )
+        .controlSize(.large)
+        .disabled(isSendingForm)
     }
 
     private func sendDrafts() {

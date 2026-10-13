@@ -20,7 +20,7 @@ enum ContentType: String, Sendable, Identifiable, CaseIterable {
     var label: LocalizedStringResource {
         switch self {
         case .form:
-            return .tabForm
+            return .kTimesheet
         case .activity:
             return .tabActivity
         }
@@ -38,21 +38,26 @@ struct ContentView: View {
         Group {
             #if os(iOS)
             TabView(selection: $contentType) {
-                NavigationStack {
-                    FormView(state: formState)
-                        .navigationTitle(Text(ContentType.form.label))
-                        .toolbar { settingsToolbar }
+                Tab(value: ContentType.form) {
+                    NavigationStack {
+                        FormView(state: formState)
+                            .navigationTitle(Text(ContentType.form.label))
+                            .toolbar { settingsToolbar }
+                    }
+                } label: {
+                    Label(ContentType.form.label, systemImage: "square.and.pencil")
                 }
-                .tabItem { Label(ContentType.form.label, systemImage: "square.and.pencil") }
-                .tag(ContentType.form)
 
-                NavigationStack {
-                    ActivitiesView()
-                        .navigationTitle(Text(ContentType.activity.label))
-                        .toolbar { settingsToolbar }
+                Tab(value: ContentType.activity) {
+                    NavigationStack {
+                        ActivitiesView()
+                            .navigationTitle(Text(ContentType.activity.label))
+                            .toolbarTitleDisplayMode(.inline)
+                            .toolbar { settingsToolbar }
+                    }
+                } label: {
+                    Label(ContentType.activity.label, systemImage: "clock")
                 }
-                .tabItem { Label(ContentType.activity.label, systemImage: "clock") }
-                .tag(ContentType.activity)
             }
             .sheet(isPresented: $isShowingSettings) {
                 NavigationStack {

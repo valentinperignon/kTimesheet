@@ -99,6 +99,7 @@ struct FormView: View {
             .controlSize(.large)
             #endif
         }
+        .scrollBounceBehavior(.basedOnSize)
         #if os(iOS)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             FormActionBar {
@@ -119,6 +120,17 @@ struct FormView: View {
 
     @ViewBuilder
     private var formButtons: some View {
+        Button(action: saveDraft) {
+            Label(.buttonSave, systemImage: "plus.circle")
+                #if os(iOS)
+                .frame(maxWidth: .infinity, minHeight: 28)
+                #endif
+        }
+        #if os(iOS)
+        .buttonStyle(.bordered)
+        #endif
+        .disabled(!isFormValid || isSendingForm)
+        
         LoadingButton(
             label: .buttonSend,
             systemImage: "checkmark.circle",
@@ -128,17 +140,6 @@ struct FormView: View {
         )
         #if os(iOS)
         .buttonStyle(.borderedProminent)
-        #endif
-        .disabled(!isFormValid || isSendingForm)
-
-        Button(action: saveDraft) {
-            Label(.buttonSave, systemImage: "plus.circle")
-                #if os(iOS)
-                .frame(maxWidth: .infinity, minHeight: 28)
-                #endif
-        }
-        #if os(iOS)
-        .buttonStyle(.bordered)
         #endif
         .disabled(!isFormValid || isSendingForm)
     }

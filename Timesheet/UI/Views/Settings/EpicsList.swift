@@ -11,10 +11,23 @@ import SwiftUI
 struct EpicsList: View {
     @ObservedResults(Epic.self, sortDescriptor: SortDescriptor(keyPath: "summary", ascending: true)) var epics
 
+    @State private var searchText = ""
+
+    private var filteredEpics: [Epic] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        return epics.filter { query.isEmpty || $0.summary.localizedStandardContains(query) }
+    }
+
     var body: some View {
         #if os(iOS)
-        List(epics) { epic in
+        List(filteredEpics) { epic in
             EpicToggle(epic: epic)
+        }
+        .searchable(text: $searchText)
+        .overlay {
+            if filteredEpics.isEmpty && !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                ContentUnavailableView.search(text: searchText)
+            }
         }
         #else
         Table(epics) {

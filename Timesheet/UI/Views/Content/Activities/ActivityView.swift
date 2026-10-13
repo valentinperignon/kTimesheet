@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ActivityView: View {
     let activity: Activity
+    
+    var padding: CGFloat = 6.0
+    var radius: CGFloat = 8.0
 
     private var color: Color {
         activity.draft ? .red : .blue
@@ -59,15 +62,14 @@ struct ActivityView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(6)
+        .padding(padding)
         .padding(.leading, 4)
         .overlay(alignment: .leading) {
             Rectangle()
                 .fill(color.tertiary)
                 .frame(width: 4)
         }
-        .background(color.quaternary.opacity(0.3))
-        .clipShape(.rect(cornerRadius: 8))
+        .background(color.quaternary.opacity(0.3), in: .rect(cornerRadius: radius))
     }
 
     private func deleteActivity() {

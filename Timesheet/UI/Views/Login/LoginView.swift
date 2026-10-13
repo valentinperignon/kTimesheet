@@ -36,40 +36,42 @@ struct LoginView: View {
                 .font(.title)
             #endif
 
-            TextField(String(localized: .fieldEmail), text: $username)
-                #if os(macOS)
-                .textFieldStyle(.roundedBorder)
-                #endif
-                .textContentType(.emailAddress)
-                #if os(iOS)
-                .keyboardType(.emailAddress)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                #endif
-                .onSubmit(login)
+            Section {
+                TextField(String(localized: .fieldEmail), text: $username)
+                    #if os(macOS)
+                    .textFieldStyle(.roundedBorder)
+                    #endif
+                    .textContentType(.emailAddress)
+                    #if os(iOS)
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    #endif
+                    .onSubmit(login)
 
-            SecureField(.fieldToken, text: $token)
+                SecureField(.fieldToken, text: $token)
+                    #if os(macOS)
+                    .textFieldStyle(.roundedBorder)
+                    #endif
+                    .textContentType(.password)
+                    .onSubmit(login)
+            } footer: {
+                Button(action: didTapHelpButton) {
+                    Text(.buttonNoAtlassianToken)
+                        .font(.caption)
+                }
                 #if os(macOS)
-                .textFieldStyle(.roundedBorder)
+                .buttonStyle(.link)
+                #else
+                .buttonStyle(.borderless)
                 #endif
-                .textContentType(.password)
-                .onSubmit(login)
-
-            Button(action: didTapHelpButton) {
-                Text(.buttonNoAtlassianToken)
-                    .font(.caption)
             }
-            #if os(macOS)
-            .buttonStyle(.link)
-            #else
-            .buttonStyle(.borderless)
-            #endif
-            .padding(.bottom, 8)
 
             #if os(macOS)
             loginButton
             #endif
         }
+        .scrollBounceBehavior(.basedOnSize)
         #if os(macOS)
         .padding()
         #else
