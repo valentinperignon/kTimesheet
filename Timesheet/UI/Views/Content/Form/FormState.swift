@@ -26,10 +26,8 @@ final class FormState {
         subjectID = lastSelectedSubject
     }
 
-    /// Clears what belongs to a single entry, keeping the selection for the next one.
     func resetEntry() {
         duration = Calendar.current.startOfDay(for: .now)
-        date = .now
         comment = ""
     }
 }

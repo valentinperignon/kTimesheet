@@ -11,6 +11,7 @@ struct JiraFetcher: Sendable {
     private let baseURL = "https://infomaniak.atlassian.net"
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         return formatter
     }()
@@ -23,6 +24,7 @@ struct JiraFetcher: Sendable {
     }
 
     enum RequestMethod: String {
+        case get = "GET"
         case post = "POST"
     }
 
@@ -75,7 +77,9 @@ struct JiraFetcher: Sendable {
 
     func performRequest<T: Decodable>(_ request: URLRequest) async throws -> T {
         let data = try await performRequest(request)
-        return try JSONDecoder().decode(T.self, from: data)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        return try decoder.decode(T.self, from: data)
     }
     
     private static func generateToken(forUser user: User) -> String {

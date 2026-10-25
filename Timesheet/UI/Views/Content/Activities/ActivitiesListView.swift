@@ -14,6 +14,8 @@ struct ActivitiesListView: View {
 
     @ObservedResults(Activity.self) private var activities
 
+    let date: Date
+
     @State private var isSendingForm = false
     @State private var isShowingSuccess = false
     @State private var isShowingError = false
@@ -23,6 +25,7 @@ struct ActivitiesListView: View {
     }
 
     init(date: Date) {
+        self.date = date
         _activities = ObservedResults(
             Activity.self,
             filter: NSPredicate(
@@ -117,6 +120,9 @@ struct ActivitiesListView: View {
                     break
                 }
             }
+
+            // Swaps the activities just sent for their Jira worklogs
+            try? await jiraManager.fetchActivities(of: date)
 
             isSendingForm = false
         }

@@ -35,6 +35,8 @@ struct ContentView: View {
     @State private var formState = FormState()
 
     var body: some View {
+        @Bindable var formState = formState
+
         Group {
             #if os(iOS)
             TabView(selection: $contentType) {
@@ -50,7 +52,7 @@ struct ContentView: View {
 
                 Tab(value: ContentType.activity) {
                     NavigationStack {
-                        ActivitiesView()
+                        ActivitiesView(date: $formState.date)
                             .navigationTitle(Text(ContentType.activity.label))
                             .toolbarTitleDisplayMode(.inline)
                             .toolbar { settingsToolbar }
@@ -80,7 +82,7 @@ struct ContentView: View {
                 case .form:
                     FormView(state: formState)
                 case .activity:
-                    ActivitiesView()
+                    ActivitiesView(date: $formState.date)
                 }
             }
             .padding()
