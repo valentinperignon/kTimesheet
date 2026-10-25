@@ -69,7 +69,8 @@ struct ActivityView: View {
                 .fill(color.tertiary)
                 .frame(width: 4)
         }
-        .background(color.quaternary.opacity(0.3), in: .rect(cornerRadius: radius))
+        .background(color.quaternary.opacity(0.3))
+        .clipShape(.rect(cornerRadius: radius))
     }
 
     private func deleteActivity() {
